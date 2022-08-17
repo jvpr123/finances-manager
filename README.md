@@ -1,4 +1,4 @@
-# Bills Manager
+# Finances Manager
 
 ## Purpose
 
