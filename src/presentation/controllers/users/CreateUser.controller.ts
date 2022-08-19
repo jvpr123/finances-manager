@@ -10,7 +10,7 @@ import {
 } from "src/presentation/utils/http/HttpResponse.factory";
 
 import { ICreateUserUseCase } from "@domain/useCases/users/create/CreateUser.interface";
-import { IValidator } from "../../protocols/Validator.interface";
+import { IValidator } from "@validation/protocols/Validator.interface";
 
 export class CreateUserController implements IController {
   constructor(

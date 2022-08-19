@@ -26,7 +26,8 @@
     "paths": {
       "@domain/*": ["./src/domain/*"],
       "@data/*": ["./src/data/*"],
-      "@presentation/*": ["./src/presentation/*"]
+      "@presentation/*": ["./src/presentation/*"],
+      "@validation/*": ["./src/validation/*"]
     },
     // "moduleResolution": "node",                       /* Specify how TypeScript looks up a file from a given module specifier. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
