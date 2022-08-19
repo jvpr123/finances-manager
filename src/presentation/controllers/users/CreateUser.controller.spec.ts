@@ -7,10 +7,10 @@ import {
   badRequest,
   created,
   internalServerError,
-} from "src/presentation/utils/http/HttpResponse.factory";
+} from "@presentation/utils/http/HttpResponse.factory";
 
 import { CreateUserController } from "./CreateUser.controller";
-import { IValidator } from "@presentation/protocols/Validator.interface";
+import { IValidator } from "@validation/protocols/Validator.interface";
 
 const makeValidatorStub = (): IValidator => ({
   validate: jest.fn().mockReturnValue([]),
