@@ -1,11 +1,19 @@
 import { IUserModel } from "@domain/models/User.model";
-import { ICreateUserDto } from "@domain/dto/users/CreateUser.dto";
+import {
+  ICreateUserDto,
+  ICreateUserInput,
+} from "@domain/dto/users/CreateUser.dto";
 
 export const makeFakeUserDto = (): ICreateUserDto => ({
   name: "valid_name",
   email: "valid_email",
   password: "valid_password",
   phone: "valid_phone",
+});
+
+export const makeFakeUserInput = (): ICreateUserInput => ({
+  ...makeFakeUserDto(),
+  passwordConfirmation: "valid_password",
 });
 
 export const makeFakeUser = (): IUserModel => ({
