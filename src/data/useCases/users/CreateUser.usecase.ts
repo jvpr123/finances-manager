@@ -11,7 +11,7 @@ export class CreateUserUseCase implements ICreateUserUseCase {
     private readonly repository: IUserRepository
   ) {}
 
-  async execute(createUserDto: ICreateUserDto): Promise<any> {
+  async execute(createUserDto: ICreateUserDto): Promise<Partial<IUserModel>> {
     const hashedPassword = await this.encrypter.hash(createUserDto.password);
     const createdUser = await this.repository.create({
       ...createUserDto,
