@@ -1,26 +1,14 @@
 import { ICreateUserUseCase } from "@domain/useCases/users/create/CreateUser.interface";
-import { ICreateUserDto } from "@domain/dto/users/CreateUser.dto";
 
 import { CreateUserUseCase } from "./CreateUser.usecase";
-import { IEncrypter } from "../../protocols/Encrypter.interface";
+import { IEncrypter } from "@data/protocols/Encrypter.interface";
 import { IUserRepository } from "@data/protocols/UserRepository.interface";
-import { IUserModel } from "@domain/models/User.model";
+import {
+  makeFakeUser,
+  makeFakeUserDto,
+} from "src/__tests__/utils/UserMocks.factory";
 
 describe("Create User UseCase", () => {
-  const makeFakeUserDto = (): ICreateUserDto => ({
-    name: "valid_name",
-    email: "valid_email",
-    password: "valid_password",
-    phone: "valid_phone",
-  });
-
-  const makeFakeUser = (): IUserModel => ({
-    ...makeFakeUserDto(),
-    id: "valid_id",
-    createdAt: new Date(2022),
-    updatedAt: new Date(2022),
-  });
-
   const makeEncrypterStub = (): IEncrypter => ({
     hash: jest.fn().mockResolvedValue("hashed_password"),
   });
