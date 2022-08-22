@@ -4,67 +4,28 @@ import { makeFakeRequest } from "src/__tests__/utils/http/HttpMocks.factory";
 import { ICreateUserUseCase } from "@domain/useCases/users/create/CreateUser.interface";
 import { IController } from "@presentation/protocols/Controller.interface";
 import {
-  badRequest,
   created,
   internalServerError,
-} from "@presentation/utils/http/HttpResponse.factory";
+} from "src/presentation/utils/http/HttpResponse.factory";
 
 import { CreateUserController } from "./CreateUser.controller";
-import { IValidator } from "@validation/protocols/Validator.interface";
-
-const makeValidatorStub = (): IValidator => ({
-  validate: jest.fn().mockReturnValue([]),
-});
 
 const makeUseCaseStub = (): ICreateUserUseCase => ({
   execute: jest.fn().mockResolvedValue(makeFakeUser()),
 });
 
-const makeSUT = (
-  validator: IValidator,
-  useCase: ICreateUserUseCase
-): IController => new CreateUserController(validator, useCase);
+const makeSUT = (useCase: ICreateUserUseCase): IController =>
+  new CreateUserController(useCase);
 
 describe("Create User Controller", () => {
   let sut: IController;
-  let validator: IValidator;
   let useCase: ICreateUserUseCase;
 
   const httpRequest = makeFakeRequest();
 
   beforeEach(() => {
     useCase = makeUseCaseStub();
-    validator = makeValidatorStub();
-    sut = makeSUT(validator, useCase);
-  });
-
-  describe("Dependency: Validator", () => {
-    it("should call validate() method from validator with correct values", async () => {
-      await sut.handle(httpRequest);
-      expect(validator.validate).toHaveBeenCalledWith(httpRequest.body);
-    });
-
-    it("should call execute() method from createUserUseCase when validation succeeds", async () => {
-      await sut.handle(makeFakeRequest());
-      expect(useCase.execute).toHaveBeenCalledTimes(1);
-    });
-
-    it("should not call execute() method from createUserUseCase when validation fails", async () => {
-      const mockErrors = [new Error("Error message")];
-      validator.validate = jest.fn().mockReturnValueOnce(mockErrors);
-
-      await sut.handle(makeFakeRequest());
-      expect(useCase.execute).toHaveBeenCalledTimes(0);
-    });
-
-    it("should return an 400 status-code response when use-case throws", async () => {
-      const mockErrors = [new Error("Error message")];
-      validator.validate = jest.fn().mockReturnValueOnce(mockErrors);
-
-      expect(sut.handle(makeFakeRequest())).resolves.toStrictEqual(
-        badRequest(mockErrors)
-      );
-    });
+    sut = makeSUT(useCase);
   });
 
   describe("Dependency: CreateUserUseCase", () => {

@@ -1,14 +1,21 @@
-import { ICreateUserUseCase } from "@domain/useCases/users/create/CreateUser.interface";
-
-import { CreateUserUseCase } from "./CreateUser.usecase";
-import { IEncrypter } from "@data/protocols/Encrypter.interface";
-import { IUserRepository } from "@data/protocols/UserRepository.interface";
 import {
   makeFakeUser,
   makeFakeUserDto,
 } from "src/__tests__/utils/UserMocks.factory";
 
+import { ICreateUserDto } from "@domain/dto/users/CreateUser.dto";
+import { ICreateUserUseCase } from "@domain/useCases/users/create/CreateUser.interface";
+
+import { CreateUserUseCase } from "./CreateUser.usecase";
+import { IValidator } from "@data/protocols/Validator.interface";
+import { IEncrypter } from "@data/protocols/Encrypter.interface";
+import { IUserRepository } from "@data/protocols/UserRepository.interface";
+
 describe("Create User UseCase", () => {
+  const makeValidatorStub = (): IValidator<ICreateUserDto> => ({
+    validate: jest.fn().mockResolvedValue(makeFakeUserDto()),
+  });
+
   const makeEncrypterStub = (): IEncrypter => ({
     hash: jest.fn().mockResolvedValue("hashed_password"),
   });
@@ -17,47 +24,77 @@ describe("Create User UseCase", () => {
     create: jest.fn().mockResolvedValue(makeFakeUser()),
   });
 
-  const makeSUT = (encrypter: IEncrypter, repository: IUserRepository) =>
-    new CreateUserUseCase(encrypter, repository);
+  const makeSUT = (
+    validator: IValidator<ICreateUserDto>,
+    encrypter: IEncrypter,
+    repository: IUserRepository
+  ) => new CreateUserUseCase(validator, encrypter, repository);
 
   let sut: ICreateUserUseCase;
+  let validator: IValidator<ICreateUserDto>;
   let encrypter: IEncrypter;
   let repository: IUserRepository;
 
   beforeAll(() => {
+    validator = makeValidatorStub();
     encrypter = makeEncrypterStub();
     repository = makeRepositoryStub();
-    sut = makeSUT(encrypter, repository);
+
+    sut = makeSUT(validator, encrypter, repository);
   });
 
-  it("should call encrypter with correct password", async () => {
-    const fakeUserInput = makeFakeUserDto();
+  describe("Dependency: Validator", () => {
+    it("should call validate() method from validator with correct values", async () => {
+      await sut.execute(makeFakeUserDto());
+      expect(validator.validate).toHaveBeenCalledWith(makeFakeUserDto());
+    });
 
-    await sut.execute(fakeUserInput);
-    expect(encrypter.hash).toHaveBeenCalledWith(fakeUserInput.password);
-  });
+    it("should continue method execution when validation succeeds", async () => {
+      await sut.execute(makeFakeUserDto());
 
-  it("should throw an error when encrypter throws", async () => {
-    jest.spyOn(encrypter, "hash").mockRejectedValueOnce(new Error());
-    expect(sut.execute(makeFakeUserDto())).rejects.toThrow(new Error());
-  });
+      expect(encrypter.hash).toHaveBeenCalledTimes(1);
+      expect(repository.create).toHaveBeenCalledTimes(1);
+    });
 
-  it("should call users repository with correct values", async () => {
-    const fakeUserInput = makeFakeUserDto();
+    it("should not continue method execution when validation fails", async () => {
+      validator.validate = jest.fn().mockRejectedValueOnce(new Error());
 
-    await sut.execute(fakeUserInput);
-    expect(repository.create).toHaveBeenCalledWith({
-      ...fakeUserInput,
-      password: "hashed_password",
+      expect(sut.execute(makeFakeUserDto())).rejects.toThrow();
     });
   });
 
-  it("should throw an error when repository throws", async () => {
-    jest.spyOn(repository, "create").mockRejectedValueOnce(new Error());
-    expect(sut.execute(makeFakeUserDto())).rejects.toThrow(new Error());
+  describe("Dependency: Encrypter", () => {
+    it("should call encrypter with correct password", async () => {
+      const fakeUserInput = makeFakeUserDto();
+
+      await sut.execute(fakeUserInput);
+      expect(encrypter.hash).toHaveBeenCalledWith(fakeUserInput.password);
+    });
+
+    it("should throw an error when encrypter throws", async () => {
+      jest.spyOn(encrypter, "hash").mockRejectedValueOnce(new Error());
+      expect(sut.execute(makeFakeUserDto())).rejects.toThrow(new Error());
+    });
   });
 
-  it("should return an UserModel instance when operations succeed", async () => {
-    expect(sut.execute(makeFakeUserDto())).resolves.toEqual(makeFakeUser());
+  describe("Dependency: Users Repository", () => {
+    it("should call users repository with correct values", async () => {
+      const fakeUserInput = makeFakeUserDto();
+
+      await sut.execute(fakeUserInput);
+      expect(repository.create).toHaveBeenCalledWith({
+        ...fakeUserInput,
+        password: "hashed_password",
+      });
+    });
+
+    it("should throw an error when repository throws", async () => {
+      jest.spyOn(repository, "create").mockRejectedValueOnce(new Error());
+      expect(sut.execute(makeFakeUserDto())).rejects.toThrow(new Error());
+    });
+
+    it("should return an UserModel instance when operations succeed", async () => {
+      expect(sut.execute(makeFakeUserDto())).resolves.toEqual(makeFakeUser());
+    });
   });
 });
