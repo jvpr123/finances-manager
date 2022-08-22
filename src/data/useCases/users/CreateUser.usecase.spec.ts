@@ -3,7 +3,10 @@ import {
   makeFakeUserDto,
 } from "src/__tests__/utils/UserMocks.factory";
 
-import { ICreateUserDto } from "@domain/dto/users/CreateUser.dto";
+import {
+  ICreateUserDto,
+  ICreateUserInput,
+} from "@domain/dto/users/CreateUser.dto";
 import { ICreateUserUseCase } from "@domain/useCases/users/create/CreateUser.interface";
 
 import { CreateUserUseCase } from "./CreateUser.usecase";
@@ -12,7 +15,10 @@ import { IEncrypter } from "@data/protocols/Encrypter.interface";
 import { IUserRepository } from "@data/protocols/UserRepository.interface";
 
 describe("Create User UseCase", () => {
-  const makeValidatorStub = (): IValidator<ICreateUserDto> => ({
+  const makeValidatorStub = (): IValidator<
+    ICreateUserInput,
+    ICreateUserDto
+  > => ({
     validate: jest.fn().mockResolvedValue(makeFakeUserDto()),
   });
 
@@ -25,13 +31,13 @@ describe("Create User UseCase", () => {
   });
 
   const makeSUT = (
-    validator: IValidator<ICreateUserDto>,
+    validator: IValidator<ICreateUserInput, ICreateUserDto>,
     encrypter: IEncrypter,
     repository: IUserRepository
   ) => new CreateUserUseCase(validator, encrypter, repository);
 
   let sut: ICreateUserUseCase;
-  let validator: IValidator<ICreateUserDto>;
+  let validator: IValidator<ICreateUserInput, ICreateUserDto>;
   let encrypter: IEncrypter;
   let repository: IUserRepository;
 
