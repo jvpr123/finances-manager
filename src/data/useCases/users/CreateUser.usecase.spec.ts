@@ -1,25 +1,22 @@
 import {
   makeFakeUser,
   makeFakeUserDto,
+  makeFakeUserInput,
 } from "src/__tests__/utils/UserMocks.factory";
 
-import {
-  ICreateUserDto,
-  ICreateUserInput,
-} from "@domain/dto/users/CreateUser.dto";
 import { ICreateUserUseCase } from "@domain/useCases/users/create/CreateUser.interface";
 
 import { CreateUserUseCase } from "./CreateUser.usecase";
 import { IValidator } from "@data/protocols/Validator.interface";
 import { IEncrypter } from "@data/protocols/Encrypter.interface";
 import { IUserRepository } from "@data/protocols/UserRepository.interface";
+import { ValidationError } from "../../../errors/Validation.error";
 
 describe("Create User UseCase", () => {
-  const makeValidatorStub = (): IValidator<
-    ICreateUserInput,
-    ICreateUserDto
-  > => ({
-    validate: jest.fn().mockResolvedValue(makeFakeUserDto()),
+  const makeValidatorStub = (): IValidator => ({
+    validate: jest
+      .fn()
+      .mockResolvedValue({ isValid: true, data: makeFakeUserInput() }),
   });
 
   const makeEncrypterStub = (): IEncrypter => ({
@@ -31,41 +28,49 @@ describe("Create User UseCase", () => {
   });
 
   const makeSUT = (
-    validator: IValidator<ICreateUserInput, ICreateUserDto>,
+    validator: IValidator,
     encrypter: IEncrypter,
     repository: IUserRepository
   ) => new CreateUserUseCase(validator, encrypter, repository);
 
   let sut: ICreateUserUseCase;
-  let validator: IValidator<ICreateUserInput, ICreateUserDto>;
+  let validator: IValidator;
   let encrypter: IEncrypter;
   let repository: IUserRepository;
 
-  beforeAll(() => {
+  beforeEach(() => {
     validator = makeValidatorStub();
     encrypter = makeEncrypterStub();
     repository = makeRepositoryStub();
+
+    validator.validate = jest
+      .fn()
+      .mockReturnValue({ isValid: true, data: makeFakeUserDto() });
 
     sut = makeSUT(validator, encrypter, repository);
   });
 
   describe("Dependency: Validator", () => {
     it("should call validate() method from validator with correct values", async () => {
-      await sut.execute(makeFakeUserDto());
-      expect(validator.validate).toHaveBeenCalledWith(makeFakeUserDto());
+      await sut.execute(makeFakeUserInput());
+      expect(validator.validate).toBeCalledWith(makeFakeUserInput());
     });
 
     it("should continue method execution when validation succeeds", async () => {
-      await sut.execute(makeFakeUserDto());
+      await sut.execute(makeFakeUserInput());
 
       expect(encrypter.hash).toHaveBeenCalledTimes(1);
       expect(repository.create).toHaveBeenCalledTimes(1);
     });
 
-    it("should not continue method execution when validation fails", async () => {
-      validator.validate = jest.fn().mockRejectedValueOnce(new Error());
+    it("should throw a Validation Error when validation fails", async () => {
+      validator.validate = jest
+        .fn()
+        .mockReturnValueOnce({ isValid: false, data: ["validation_error"] });
 
-      expect(sut.execute(makeFakeUserDto())).rejects.toThrow();
+      expect(sut.execute(makeFakeUserInput())).rejects.toEqual(
+        new ValidationError(["validation_error"])
+      );
     });
   });
 
@@ -85,11 +90,9 @@ describe("Create User UseCase", () => {
 
   describe("Dependency: Users Repository", () => {
     it("should call users repository with correct values", async () => {
-      const fakeUserInput = makeFakeUserDto();
-
-      await sut.execute(fakeUserInput);
+      await sut.execute(makeFakeUserDto());
       expect(repository.create).toHaveBeenCalledWith({
-        ...fakeUserInput,
+        ...makeFakeUserDto(),
         password: "hashed_password",
       });
     });
