@@ -1,3 +1,7 @@
-export interface IValidator<Input, Output> {
-  validate(input: Input): Promise<Output>;
+export interface IValidationResult {
+  isValid: boolean;
+  data: any;
+}
+export interface IValidator {
+  validate(input: any): IValidationResult;
 }
