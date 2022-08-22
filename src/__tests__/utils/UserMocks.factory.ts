@@ -6,14 +6,14 @@ import {
 
 export const makeFakeUserDto = (): ICreateUserDto => ({
   name: "valid_name",
-  email: "valid_email",
-  password: "valid_password",
-  phone: "valid_phone",
+  email: "valid@email.com",
+  password: "secret123",
+  phone: "12345678902",
 });
 
 export const makeFakeUserInput = (): ICreateUserInput => ({
   ...makeFakeUserDto(),
-  passwordConfirmation: "valid_password",
+  passwordConfirmation: "secret123",
 });
 
 export const makeFakeUser = (): IUserModel => ({

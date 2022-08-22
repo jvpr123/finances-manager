@@ -1,3 +1,3 @@
-export interface IValidator<T> {
-  validate(input: any): T | Error[];
+export interface IValidator<Input, Output> {
+  validate(input: Input): Promise<Output>;
 }
