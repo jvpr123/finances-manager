@@ -1,13 +1,18 @@
-import { DataSource, Repository } from "typeorm";
-
-import { User } from "./User.entity";
-import { IUserRepository } from "src/data/protocols/UserRepository.interface";
-import { UserTypeOrmRepository } from "./UserTypeORM.repository";
 import {
   makeFakeUser,
   makeFakeUserDto,
 } from "src/__tests__/utils/UserMocks.factory";
+import {
+  rejectValueOnce,
+  resolveValue,
+} from "src/__tests__/utils/jest/MockReturnValues.factory";
 import { makeDataSource } from "src/__tests__/utils/typeORM/DataSource.factory";
+
+import { DataSource, Repository } from "typeorm";
+
+import { User } from "./User.entity";
+import { UserTypeOrmRepository } from "./UserTypeORM.repository";
+import { IUserRepository } from "src/data/protocols/UserRepository.interface";
 
 describe("User Repository - TypeORM", () => {
   let ds: DataSource;
@@ -24,7 +29,7 @@ describe("User Repository - TypeORM", () => {
     await repository.clear();
 
     repository.create = jest.fn().mockReturnValue(makeFakeUser());
-    repository.save = jest.fn().mockResolvedValue(makeFakeUser());
+    repository.save = resolveValue(makeFakeUser());
   });
 
   afterAll(async () => await ds.destroy());
@@ -43,7 +48,7 @@ describe("User Repository - TypeORM", () => {
     });
 
     it("should throw an error when typeORM repository throws", async () => {
-      repository.save = jest.fn().mockRejectedValueOnce(new Error());
+      repository.save = rejectValueOnce(new Error());
       expect(sut.create(makeFakeUserDto())).rejects.toThrow(new Error());
     });
 

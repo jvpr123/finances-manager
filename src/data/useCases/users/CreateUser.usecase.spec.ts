@@ -3,6 +3,11 @@ import {
   makeFakeUserDto,
   makeFakeUserInput,
 } from "src/__tests__/utils/UserMocks.factory";
+import {
+  rejectValueOnce,
+  resolveValue,
+  resolveValueOnce,
+} from "src/__tests__/utils/jest/MockReturnValues.factory";
 
 import { ICreateUserUseCase } from "src/domain/useCases/users/create/CreateUser.interface";
 
@@ -15,17 +20,15 @@ import { ValidationError } from "src//errors/validation/Validation.error";
 
 describe("Create User UseCase", () => {
   const makeValidatorStub = (): IValidator => ({
-    validate: jest
-      .fn()
-      .mockResolvedValue({ isValid: true, data: makeFakeUserInput() }),
+    validate: resolveValue({ isValid: true, data: makeFakeUserInput() }),
   });
 
   const makeEncrypterStub = (): IEncrypter => ({
-    hash: jest.fn().mockResolvedValue("hashed_password"),
+    hash: resolveValue("hashed_password"),
   });
 
   const makeRepositoryStub = (): IUserRepository => ({
-    create: jest.fn().mockResolvedValue(makeFakeUser()),
+    create: resolveValue(makeFakeUser()),
   });
 
   const makeSUT = (
@@ -65,9 +68,10 @@ describe("Create User UseCase", () => {
     });
 
     it("should throw a Validation Error when validation fails", async () => {
-      validator.validate = jest
-        .fn()
-        .mockReturnValueOnce({ isValid: false, data: ["validation_error"] });
+      validator.validate = resolveValueOnce({
+        isValid: false,
+        data: ["validation_error"],
+      });
 
       expect(sut.execute(makeFakeUserInput())).rejects.toEqual(
         new ValidationError(["validation_error"])
@@ -84,7 +88,7 @@ describe("Create User UseCase", () => {
     });
 
     it("should throw an error when encrypter throws", async () => {
-      jest.spyOn(encrypter, "hash").mockRejectedValueOnce(new Error());
+      encrypter.hash = rejectValueOnce(new Error());
       expect(sut.execute(makeFakeUserDto())).rejects.toThrow(new Error());
     });
   });
@@ -99,7 +103,7 @@ describe("Create User UseCase", () => {
     });
 
     it("should throw an error when repository throws", async () => {
-      jest.spyOn(repository, "create").mockRejectedValueOnce(new Error());
+      repository.create = rejectValueOnce(new Error());
       expect(sut.execute(makeFakeUserDto())).rejects.toThrow(new Error());
     });
 
