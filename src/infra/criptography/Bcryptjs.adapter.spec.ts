@@ -1,4 +1,4 @@
-import { IEncrypter } from "@data/protocols/Encrypter.interface";
+import { IEncrypter } from "src/data/protocols/Encrypter.interface";
 import bcrypt from "bcryptjs";
 import { BcryptjsAdapter } from "./Bcryptjs.adapter";
 

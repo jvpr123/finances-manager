@@ -1,4 +1,4 @@
-import { IHttpResponse } from "@presentation/protocols/Http.interface";
+import { IHttpResponse } from "src/presentation/protocols/Http.interface";
 
 export const created = (body: any): IHttpResponse => ({
   statusCode: 201,

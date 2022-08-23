@@ -2,7 +2,7 @@ import { makeFakeUserInput } from "../UserMocks.factory";
 import {
   IHttpRequest,
   IHttpResponse,
-} from "@presentation/protocols/Http.interface";
+} from "src/presentation/protocols/Http.interface";
 
 export const makeFakeRequest = (): IHttpRequest => ({
   body: { ...makeFakeUserInput() },

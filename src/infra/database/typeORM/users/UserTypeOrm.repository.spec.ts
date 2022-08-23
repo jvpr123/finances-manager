@@ -1,7 +1,7 @@
 import { DataSource, Repository } from "typeorm";
 
 import { User } from "./User.entity";
-import { IUserRepository } from "@data/protocols/UserRepository.interface";
+import { IUserRepository } from "src/data/protocols/UserRepository.interface";
 import { UserTypeOrmRepository } from "./UserTypeORM.repository";
 import {
   makeFakeUser,

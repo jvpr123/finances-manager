@@ -1,8 +1,8 @@
-import { IUserModel } from "@domain/models/User.model";
+import { IUserModel } from "src/domain/models/User.model";
 import {
   ICreateUserDto,
   ICreateUserInput,
-} from "@domain/dto/users/CreateUser.dto";
+} from "src/domain/dto/users/CreateUser.dto";
 
 export const makeFakeUserDto = (): ICreateUserDto => ({
   name: "valid_name",

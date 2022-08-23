@@ -1,14 +1,11 @@
-import { IUserModel } from "@domain/models/User.model";
-import { ICreateUserUseCase } from "@domain/useCases/users/create/CreateUser.interface";
-import {
-  ICreateUserInput,
-  ICreateUserDto,
-} from "@domain/dto/users/CreateUser.dto";
+import { IUserModel } from "src/domain/models/User.model";
+import { ICreateUserUseCase } from "src/domain/useCases/users/create/CreateUser.interface";
 
-import { IValidator } from "@data/protocols/Validator.interface";
-import { IEncrypter } from "@data/protocols/Encrypter.interface";
-import { IUserRepository } from "@data/protocols/UserRepository.interface";
-import { ValidationError } from "src/errors/Validation.error";
+import { IValidator } from "src/data/protocols/Validator.interface";
+import { IEncrypter } from "src/data/protocols/Encrypter.interface";
+import { IUserRepository } from "src/data/protocols/UserRepository.interface";
+
+import { ValidationError } from "src/errors/validation/Validation.error";
 
 export class CreateUserUseCase implements ICreateUserUseCase {
   constructor(

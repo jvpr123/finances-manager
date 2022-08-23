@@ -1,15 +1,11 @@
 import { ObjectSchema } from "joi";
 
-import { options } from "src/infra/validation/joi/Joi.options";
-
+import { ICreateUserDto } from "src/domain/dto/users/CreateUser.dto";
+import { options } from "src/infra/validation/joi/config/Joi.options";
 import {
   IValidationResult,
   IValidator,
-} from "@data/protocols/Validator.interface";
-import {
-  ICreateUserDto,
-  ICreateUserInput,
-} from "@domain/dto/users/CreateUser.dto";
+} from "src/data/protocols/Validator.interface";
 
 export class CreateUserValidator implements IValidator {
   constructor(private readonly schema: ObjectSchema<ICreateUserDto>) {}

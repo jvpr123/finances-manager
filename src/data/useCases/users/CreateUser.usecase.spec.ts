@@ -4,13 +4,14 @@ import {
   makeFakeUserInput,
 } from "src/__tests__/utils/UserMocks.factory";
 
-import { ICreateUserUseCase } from "@domain/useCases/users/create/CreateUser.interface";
+import { ICreateUserUseCase } from "src/domain/useCases/users/create/CreateUser.interface";
 
 import { CreateUserUseCase } from "./CreateUser.usecase";
-import { IValidator } from "@data/protocols/Validator.interface";
-import { IEncrypter } from "@data/protocols/Encrypter.interface";
-import { IUserRepository } from "@data/protocols/UserRepository.interface";
-import { ValidationError } from "../../../errors/Validation.error";
+import { IValidator } from "src/data/protocols/Validator.interface";
+import { IEncrypter } from "src/data/protocols/Encrypter.interface";
+import { IUserRepository } from "src/data/protocols/UserRepository.interface";
+
+import { ValidationError } from "src//errors/validation/Validation.error";
 
 describe("Create User UseCase", () => {
   const makeValidatorStub = (): IValidator => ({

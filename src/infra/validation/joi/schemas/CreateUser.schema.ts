@@ -3,7 +3,7 @@ import Joi from "joi";
 import {
   ICreateUserDto,
   ICreateUserInput,
-} from "@domain/dto/users/CreateUser.dto";
+} from "src/domain/dto/users/CreateUser.dto";
 
 export const CreateUserJoiSchema = Joi.object<
   ICreateUserDto,

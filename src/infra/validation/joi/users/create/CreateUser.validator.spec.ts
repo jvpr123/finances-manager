@@ -1,7 +1,7 @@
 import { makeFakeUserInput } from "src/__tests__/utils/UserMocks.factory";
 
 import { CreateUserValidator } from "./CreateUser.validator";
-import { options } from "src/infra/validation/joi/Joi.options";
+import { options } from "src/infra/validation/joi/config/Joi.options";
 import { CreateUserJoiSchema } from "src/infra/validation/joi/schemas/CreateUser.schema";
 
 describe("CreateUser Validator", () => {

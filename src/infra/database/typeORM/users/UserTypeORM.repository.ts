@@ -1,6 +1,6 @@
-import { IUserModel } from "@domain/models/User.model";
-import { ICreateUserDto } from "@domain/dto/users/CreateUser.dto";
-import { IUserRepository } from "@data/protocols/UserRepository.interface";
+import { IUserModel } from "src/domain/models/User.model";
+import { ICreateUserDto } from "src/domain/dto/users/CreateUser.dto";
+import { IUserRepository } from "src/data/protocols/UserRepository.interface";
 import { Repository } from "typeorm";
 import { User } from "./User.entity";
 

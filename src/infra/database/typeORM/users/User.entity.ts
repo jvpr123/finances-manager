@@ -1,4 +1,4 @@
-import { IUserModel } from "@domain/models/User.model";
+import { IUserModel } from "src/domain/models/User.model";
 import {
   Column,
   CreateDateColumn,
