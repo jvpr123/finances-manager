@@ -16,8 +16,8 @@
     "typescript": "^4.7.4"
   },
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "jest --verbose",
+    "test:watch": "jest --verbose --watch"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

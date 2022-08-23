@@ -1,14 +1,18 @@
 import { makeFakeUser } from "src/__tests__/utils/UserMocks.factory";
 import { makeFakeRequest } from "src/__tests__/utils/http/HttpMocks.factory";
+import { rejectValueOnce } from "src/__tests__/utils/jest/MockReturnValues.factory";
 
-import { ICreateUserUseCase } from "@domain/useCases/users/create/CreateUser.interface";
-import { IController } from "@presentation/protocols/Controller.interface";
+import { ICreateUserUseCase } from "src/domain/useCases/users/create/CreateUser.interface";
+import { IController } from "src/presentation/protocols/Controller.interface";
+import { CreateUserController } from "./CreateUser.controller";
 import {
   created,
+  badRequest,
   internalServerError,
 } from "src/presentation/utils/http/HttpResponse.factory";
 
-import { CreateUserController } from "./CreateUser.controller";
+import * as errorHandler from "src/errors/Handler.error";
+import { ValidationError } from "src/errors/validation/Validation.error";
 
 const makeUseCaseStub = (): ICreateUserUseCase => ({
   execute: jest.fn().mockResolvedValue(makeFakeUser()),
@@ -34,13 +38,24 @@ describe("Create User Controller", () => {
       expect(useCase.execute).toHaveBeenCalledWith(httpRequest.body);
     });
 
-    it("should return an 500 status-code response when use-case throws", async () => {
-      useCase.execute = jest
-        .fn()
-        .mockRejectedValueOnce(new Error("Error message"));
+    it("should call errorHandler() with correct values when use-case throws an error", async () => {
+      const errorHandlerSpy = jest.spyOn(errorHandler, "errorHandler");
+      useCase.execute = rejectValueOnce(new Error("error"));
+
+      await sut.handle(httpRequest);
+      expect(errorHandlerSpy).toHaveBeenCalledWith(new Error("error"));
+    });
+
+    it("should return an 400 status-code response when use-case throws a Validation Error", async () => {
+      useCase.execute = rejectValueOnce(new ValidationError([]));
+      expect(sut.handle(makeFakeRequest())).resolves.toEqual(badRequest([]));
+    });
+
+    it("should return an 500 status-code response when use-case throws general errors", async () => {
+      useCase.execute = rejectValueOnce(new Error("error"));
 
       expect(sut.handle(makeFakeRequest())).resolves.toEqual(
-        internalServerError("Error message")
+        internalServerError("error")
       );
     });
 
