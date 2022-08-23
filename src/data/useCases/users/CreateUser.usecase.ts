@@ -21,8 +21,6 @@ export class CreateUserUseCase implements ICreateUserUseCase {
       throw new ValidationError(data);
     }
 
-    console.log(data);
-
     const hashedPassword = await this.encrypter.hash(data.password);
     const createdUser = await this.repository.create({
       ...data,

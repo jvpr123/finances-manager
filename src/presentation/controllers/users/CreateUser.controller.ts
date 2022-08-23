@@ -1,14 +1,13 @@
-import { IController } from "@presentation/protocols/Controller.interface";
 import {
   IHttpRequest,
   IHttpResponse,
-} from "@presentation/protocols/Http.interface";
-import {
-  created,
-  internalServerError,
-} from "src/presentation/utils/http/HttpResponse.factory";
+} from "src/presentation/protocols/Http.interface";
+import { IController } from "src/presentation/protocols/Controller.interface";
+import { created } from "src/presentation/utils/http/HttpResponse.factory";
 
-import { ICreateUserUseCase } from "@domain/useCases/users/create/CreateUser.interface";
+import { ICreateUserUseCase } from "src/domain/useCases/users/create/CreateUser.interface";
+
+import { errorHandler } from "src/errors/Handler.error";
 
 export class CreateUserController implements IController {
   constructor(private readonly createUserUseCase: ICreateUserUseCase) {}
@@ -18,7 +17,7 @@ export class CreateUserController implements IController {
       const user = await this.createUserUseCase.execute(request.body);
       return created({ user });
     } catch (error: any) {
-      return internalServerError(error.message);
+      return errorHandler(error);
     }
   }
 }
