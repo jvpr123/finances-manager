@@ -1,4 +1,4 @@
-import { IEncrypter } from "src/data/protocols/Encrypter.interface";
+import { IEncrypter } from "src/data/protocols/cryptography/Encrypter.interface";
 import { hash } from "bcryptjs";
 
 export class BcryptjsAdapter implements IEncrypter {

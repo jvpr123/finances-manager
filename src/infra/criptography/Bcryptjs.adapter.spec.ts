@@ -2,7 +2,7 @@ import { resolveValue } from "src/__tests__/utils/jest/MockReturnValues.factory"
 
 import bcrypt from "bcryptjs";
 import { BcryptjsAdapter } from "./Bcryptjs.adapter";
-import { IEncrypter } from "src/data/protocols/Encrypter.interface";
+import { IEncrypter } from "src/data/protocols/cryptography/Encrypter.interface";
 
 describe("Bcryptjs Adapter", () => {
   beforeAll(() => {

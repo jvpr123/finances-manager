@@ -5,7 +5,7 @@ import { options } from "src/infra/validation/joi/config/Joi.options";
 import {
   IValidationResult,
   IValidator,
-} from "src/data/protocols/Validator.interface";
+} from "src/data/protocols/validation/Validator.interface";
 
 export class CreateUserValidator implements IValidator {
   constructor(private readonly schema: ObjectSchema<ICreateUserDto>) {}

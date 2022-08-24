@@ -6,7 +6,7 @@ import {
 
 export const makeFakeUserDto = (): ICreateUserDto => ({
   name: "valid_name",
-  email: "valid@email.com",
+  email: "user@email.com",
   password: "secret123",
   phone: "12345678902",
 });

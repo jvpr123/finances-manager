@@ -1,9 +1,9 @@
 import { IUserModel } from "src/domain/models/User.model";
 import { ICreateUserUseCase } from "src/domain/useCases/users/create/CreateUser.interface";
 
-import { IValidator } from "src/data/protocols/Validator.interface";
-import { IEncrypter } from "src/data/protocols/Encrypter.interface";
-import { ICreateUserRepository } from "src/data/protocols/CreateUserRepository.interface";
+import { IValidator } from "src/data/protocols/validation/Validator.interface";
+import { IEncrypter } from "src/data/protocols/cryptography/Encrypter.interface";
+import { ICreateUserRepository } from "src/data/protocols/database/CreateUserRepository.interface";
 
 import { ValidationError } from "src/errors/validation/Validation.error";
 

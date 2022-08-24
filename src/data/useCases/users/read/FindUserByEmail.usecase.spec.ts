@@ -5,8 +5,8 @@ import {
   resolveValueOnce,
 } from "src/__tests__/utils/jest/MockReturnValues.factory";
 
-import { IValidator } from "src/data/protocols/Validator.interface";
-import { IFindUserRepository } from "src/data/protocols/FindUserRepository.interface";
+import { IValidator } from "src/data/protocols/validation/Validator.interface";
+import { IFindUserRepository } from "src/data/protocols/database/FindUserRepository.interface";
 import { IFindUserByEmailUseCase } from "src/domain/useCases/users/read/FindUserByEmail.interface";
 
 import { ValidationError } from "src/errors/validation/Validation.error";
