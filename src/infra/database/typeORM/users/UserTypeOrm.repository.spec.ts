@@ -12,12 +12,11 @@ import { DataSource, Repository } from "typeorm";
 
 import { User } from "./User.entity";
 import { UserTypeOrmRepository } from "./UserTypeORM.repository";
-import { IUserRepository } from "src/data/protocols/UserRepository.interface";
 
 describe("User Repository - TypeORM", () => {
   let ds: DataSource;
   let repository: Repository<User>;
-  let sut: IUserRepository;
+  let sut: UserTypeOrmRepository;
 
   beforeAll(async () => {
     ds = await makeDataSource();
