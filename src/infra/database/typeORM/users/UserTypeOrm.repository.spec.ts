@@ -28,6 +28,7 @@ describe("User Repository - TypeORM", () => {
     await repository.clear();
 
     repository.create = jest.fn().mockReturnValue(makeFakeUser());
+    repository.findOneBy = jest.fn().mockReturnValue(makeFakeUser());
     repository.save = resolveValue(makeFakeUser());
   });
 
@@ -53,6 +54,26 @@ describe("User Repository - TypeORM", () => {
 
     it("should return an User instance when operation succeeds", async () => {
       expect(sut.create(makeFakeUserDto())).resolves.toEqual(makeFakeUser());
+    });
+  });
+
+  describe("findByEmail()", () => {
+    it("should call findOneBy() method from typeORM repository with correct values", async () => {
+      await sut.findByEmail("user@email.com");
+      expect(repository.findOneBy).toHaveBeenCalledWith({
+        email: "user@email.com",
+      });
+    });
+
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.findOneBy = rejectValueOnce(new Error());
+      expect(sut.findByEmail("user@email.com")).rejects.toThrow(new Error());
+    });
+
+    it("should return an User instance when operation succeeds", async () => {
+      expect(sut.findByEmail("user@email.com")).resolves.toEqual(
+        makeFakeUser()
+      );
     });
   });
 });
