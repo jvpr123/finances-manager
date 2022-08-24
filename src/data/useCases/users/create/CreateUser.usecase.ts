@@ -3,7 +3,7 @@ import { ICreateUserUseCase } from "src/domain/useCases/users/create/CreateUser.
 
 import { IValidator } from "src/data/protocols/Validator.interface";
 import { IEncrypter } from "src/data/protocols/Encrypter.interface";
-import { IUserRepository } from "src/data/protocols/UserRepository.interface";
+import { ICreateUserRepository } from "src/data/protocols/CreateUserRepository.interface";
 
 import { ValidationError } from "src/errors/validation/Validation.error";
 
@@ -11,7 +11,7 @@ export class CreateUserUseCase implements ICreateUserUseCase {
   constructor(
     private readonly validator: IValidator,
     private readonly encrypter: IEncrypter,
-    private readonly repository: IUserRepository
+    private readonly repository: ICreateUserRepository
   ) {}
 
   async execute(input: any): Promise<Partial<IUserModel>> {
@@ -22,11 +22,9 @@ export class CreateUserUseCase implements ICreateUserUseCase {
     }
 
     const hashedPassword = await this.encrypter.hash(data.password);
-    const { password, ...createdUser } = await this.repository.create({
+    return await this.repository.create({
       ...data,
       password: hashedPassword,
     });
-
-    return createdUser;
   }
 }
