@@ -7,7 +7,7 @@ import { created } from "src/presentation/utils/http/HttpResponse.factory";
 
 import { ICreateUserUseCase } from "src/domain/useCases/users/create/CreateUser.interface";
 
-import { errorHandler } from "src/errors/Handler.error";
+import { errorHandler } from "src/errors/utils/Handler.error";
 
 export class CreateUserController implements IController {
   constructor(private readonly createUserUseCase: ICreateUserUseCase) {}

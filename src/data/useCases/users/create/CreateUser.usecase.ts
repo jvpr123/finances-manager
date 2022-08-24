@@ -5,7 +5,7 @@ import { IValidator } from "src/data/protocols/validation/Validator.interface";
 import { IEncrypter } from "src/data/protocols/cryptography/Encrypter.interface";
 import { ICreateUserRepository } from "src/data/protocols/database/CreateUserRepository.interface";
 
-import { ValidationError } from "src/errors/validation/Validation.error";
+import { ValidationError } from "src/errors/Validation.error";
 
 export class CreateUserUseCase implements ICreateUserUseCase {
   constructor(

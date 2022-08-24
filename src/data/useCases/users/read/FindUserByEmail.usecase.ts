@@ -3,8 +3,10 @@ import { IUserModel } from "src/domain/models/User.model";
 import { IValidator } from "src/data/protocols/validation/Validator.interface";
 import { IFindUserRepository } from "src/data/protocols/database/FindUserRepository.interface";
 
-import { ValidationError } from "src/errors/validation/Validation.error";
 import { IFindUserByEmailUseCase } from "src/domain/useCases/users/read/FindUserByEmail.interface";
+
+import { ValidationError } from "src/errors/Validation.error";
+import { NotFoundError } from "src/errors/NotFound.error";
 
 export class FindUserByEmailUseCase implements IFindUserByEmailUseCase {
   constructor(
@@ -14,11 +16,15 @@ export class FindUserByEmailUseCase implements IFindUserByEmailUseCase {
 
   async execute(email: string): Promise<Partial<IUserModel>> {
     const { isValid, data } = this.validator.validate(email);
+    if (!isValid) throw new ValidationError(data);
 
-    if (!isValid) {
-      throw new ValidationError(data);
-    }
+    const userFound = await this.repository.findByEmail(email);
 
-    return await this.repository.findByEmail(email);
+    if (!userFound)
+      throw new NotFoundError(
+        `Could not find data related to ${email} address`
+      );
+
+    return userFound;
   }
 }

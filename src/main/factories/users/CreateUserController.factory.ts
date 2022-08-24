@@ -6,10 +6,10 @@ import { TypeOrmDataSource } from "src/infra/database/typeORM/DataSource.config"
 import { CreateUserJoiSchema } from "src/infra/validation/joi/schemas/CreateUser.schema";
 import { UserTypeOrmRepository } from "src/infra/database/typeORM/users/UserTypeORM.repository";
 
-import { CreateUserUseCase } from "src/data/useCases/users/CreateUser.usecase";
+import { CreateUserUseCase } from "src/data/useCases/users/create/CreateUser.usecase";
 
 import { IController } from "src/presentation/protocols/Controller.interface";
-import { CreateUserController } from "src/presentation/controllers/users/CreateUser.controller";
+import { CreateUserController } from "src/presentation/controllers/users/create/CreateUser.controller";
 
 export const makeCreateUserController = (): IController => {
   const validator = new CreateUserValidator(CreateUserJoiSchema);
