@@ -37,7 +37,10 @@
   },
   "scripts": {
     "start:dev": "sls offline",
-    "test": "jest --verbose",
-    "test:watch": "jest --verbose --watch"
+    "test": "jest --runInBand",
+    "t:unit": "jest --testMatch='**/*.spec.ts' --runInBand --verbose",
+    "t:e2e": "jest --testMatch='**/*.test.ts' --runInBand --verbose",
+    "tw:unit": "yarn t:unit --watch",
+    "tw:e2e": "yarn t:e2e --watch"
   }
 }
