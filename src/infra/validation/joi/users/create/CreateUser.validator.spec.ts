@@ -21,7 +21,7 @@ describe("CreateUser Validator", () => {
     });
   });
 
-  it("should throw a validation result with errors when validation fails", async () => {
+  it("should return a validation result with errors when validation fails", async () => {
     expect(
       sut.validate({ ...fakeUserInputData, email: "invalid_email" })
     ).toEqual({ isValid: false, data: ['"email" must be a valid email'] });
