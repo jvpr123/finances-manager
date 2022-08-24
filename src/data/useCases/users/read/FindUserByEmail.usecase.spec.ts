@@ -5,12 +5,13 @@ import {
   resolveValueOnce,
 } from "src/__tests__/utils/jest/MockReturnValues.factory";
 
+import { FindUserByEmailUseCase } from "./FindUserByEmail.usecase";
 import { IValidator } from "src/data/protocols/validation/Validator.interface";
 import { IFindUserRepository } from "src/data/protocols/database/FindUserRepository.interface";
 import { IFindUserByEmailUseCase } from "src/domain/useCases/users/read/FindUserByEmail.interface";
 
-import { ValidationError } from "src/errors/validation/Validation.error";
-import { FindUserByEmailUseCase } from "./FindUserByEmail.usecase";
+import { ValidationError } from "src/errors/Validation.error";
+import { NotFoundError } from "../../../../errors/NotFound.error";
 
 describe("Find User By Email UseCase", () => {
   const makeValidatorStub = (): IValidator => ({
@@ -71,6 +72,16 @@ describe("Find User By Email UseCase", () => {
     it("should throw an error when repository throws", async () => {
       repository.findByEmail = rejectValueOnce(new Error());
       expect(sut.execute("user@email.com")).rejects.toThrow(new Error());
+    });
+
+    it("should throw a Not Found Error when repository returns undefined", async () => {
+      repository.findByEmail = resolveValueOnce(undefined);
+
+      expect(sut.execute("unregistered@email.com")).rejects.toEqual(
+        new NotFoundError(
+          "Could not find data related to unregistered@email.com address"
+        )
+      );
     });
 
     it("should return an UserModel instance when operations succeed", async () => {

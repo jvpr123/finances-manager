@@ -11,8 +11,8 @@ import {
   internalServerError,
 } from "src/presentation/utils/http/HttpResponse.factory";
 
-import * as errorHandler from "src/errors/Handler.error";
-import { ValidationError } from "src/errors/validation/Validation.error";
+import * as errorHandler from "src/errors/utils/Handler.error";
+import { ValidationError } from "src/errors/Validation.error";
 
 const makeUseCaseStub = (): ICreateUserUseCase => ({
   execute: jest.fn().mockResolvedValue(makeFakeUser()),
