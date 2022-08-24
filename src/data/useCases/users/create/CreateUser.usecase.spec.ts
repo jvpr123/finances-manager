@@ -17,6 +17,7 @@ import { IEncrypter } from "src/data/protocols/cryptography/Encrypter.interface"
 
 import { ValidationError } from "src/errors/Validation.error";
 import { ICreateUserRepository } from "src/data/protocols/database/CreateUserRepository.interface";
+import { IFindUserRepository } from "src/data/protocols/database/FindUserRepository.interface";
 
 describe("Create User UseCase", () => {
   const makeValidatorStub = (): IValidator => ({
@@ -27,20 +28,22 @@ describe("Create User UseCase", () => {
     hash: resolveValue("hashed_password"),
   });
 
-  const makeRepositoryStub = (): ICreateUserRepository => ({
+  const makeRepositoryStub = (): ICreateUserRepository &
+    IFindUserRepository => ({
     create: resolveValue(makeFakeUser()),
+    findByEmail: resolveValue(undefined),
   });
 
   const makeSUT = (
     validator: IValidator,
     encrypter: IEncrypter,
-    repository: ICreateUserRepository
+    repository: ICreateUserRepository & IFindUserRepository
   ) => new CreateUserUseCase(validator, encrypter, repository);
 
   let sut: ICreateUserUseCase;
   let validator: IValidator;
   let encrypter: IEncrypter;
-  let repository: ICreateUserRepository;
+  let repository: ICreateUserRepository & IFindUserRepository;
 
   beforeEach(() => {
     validator = makeValidatorStub();
@@ -94,12 +97,24 @@ describe("Create User UseCase", () => {
   });
 
   describe("Dependency: Users Repository", () => {
-    it("should call users repository with correct values", async () => {
+    it("should call create() method from users repository with correct values", async () => {
       await sut.execute(makeFakeUserDto());
       expect(repository.create).toHaveBeenCalledWith({
         ...makeFakeUserDto(),
         password: "hashed_password",
       });
+    });
+
+    it("should call findByEmail() method from users repository with correct values", async () => {
+      await sut.execute(makeFakeUserDto());
+      expect(repository.findByEmail).toHaveBeenCalledWith(
+        makeFakeUserDto().email
+      );
+    });
+
+    it("should throw a Validation Error when email already exists", async () => {
+      repository.findByEmail = resolveValueOnce(makeFakeUser());
+      expect(sut.execute(makeFakeUserDto())).rejects.toThrow();
     });
 
     it("should throw an error when repository throws", async () => {

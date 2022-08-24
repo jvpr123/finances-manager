@@ -46,12 +46,12 @@ describe("Create User Controller", () => {
       expect(errorHandlerSpy).toHaveBeenCalledWith(new Error("error"));
     });
 
-    it("should return an 400 status-code response when use-case throws a Validation Error", async () => {
+    it("should return a 400 status-code response when use-case throws a Validation Error", async () => {
       useCase.execute = rejectValueOnce(new ValidationError([]));
       expect(sut.handle(makeFakeRequest())).resolves.toEqual(badRequest([]));
     });
 
-    it("should return an 500 status-code response when use-case throws general errors", async () => {
+    it("should return a 500 status-code response when use-case throws general errors", async () => {
       useCase.execute = rejectValueOnce(new Error("error"));
 
       expect(sut.handle(makeFakeRequest())).resolves.toEqual(
