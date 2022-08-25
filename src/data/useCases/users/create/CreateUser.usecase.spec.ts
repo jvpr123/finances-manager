@@ -17,7 +17,7 @@ import { IEncrypter } from "src/data/protocols/cryptography/Encrypter.interface"
 
 import { ValidationError } from "src/errors/Validation.error";
 import { ICreateUserRepository } from "src/data/protocols/database/CreateUserRepository.interface";
-import { IFindUserRepository } from "src/data/protocols/database/FindUserRepository.interface";
+import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepository.interface";
 
 describe("Create User UseCase", () => {
   const makeValidatorStub = (): IValidator => ({
@@ -29,21 +29,23 @@ describe("Create User UseCase", () => {
   });
 
   const makeRepositoryStub = (): ICreateUserRepository &
-    IFindUserRepository => ({
+    IFindUsersRepository => ({
     create: resolveValue(makeFakeUser()),
     findByEmail: resolveValue(undefined),
+    findById: resolveValue(undefined),
+    findAll: resolveValue(undefined),
   });
 
   const makeSUT = (
     validator: IValidator,
     encrypter: IEncrypter,
-    repository: ICreateUserRepository & IFindUserRepository
+    repository: ICreateUserRepository & IFindUsersRepository
   ) => new CreateUserUseCase(validator, encrypter, repository);
 
   let sut: ICreateUserUseCase;
   let validator: IValidator;
   let encrypter: IEncrypter;
-  let repository: ICreateUserRepository & IFindUserRepository;
+  let repository: ICreateUserRepository & IFindUsersRepository;
 
   beforeEach(() => {
     validator = makeValidatorStub();

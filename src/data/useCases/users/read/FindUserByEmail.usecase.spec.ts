@@ -1,3 +1,4 @@
+import { makeFindUsersRepositoryStub } from "src/__tests__/utils/typeORM/FindUsersRepository.factory";
 import { makeFakeUser } from "src/__tests__/utils/UserMocks.factory";
 import {
   rejectValueOnce,
@@ -5,33 +6,30 @@ import {
   resolveValueOnce,
 } from "src/__tests__/utils/jest/MockReturnValues.factory";
 
-import { FindUserByEmailUseCase } from "./FindUserByEmail.usecase";
-import { IValidator } from "src/data/protocols/validation/Validator.interface";
-import { IFindUserRepository } from "src/data/protocols/database/FindUserRepository.interface";
 import { IFindUserByEmailUseCase } from "src/domain/useCases/users/read/FindUserByEmail.interface";
 
+import { FindUserByEmailUseCase } from "./FindUserByEmail.usecase";
+import { IValidator } from "src/data/protocols/validation/Validator.interface";
+import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepository.interface";
+
 import { ValidationError } from "src/errors/Validation.error";
-import { NotFoundError } from "../../../../errors/NotFound.error";
+import { NotFoundError } from "src/errors/NotFound.error";
 
 describe("Find User By Email UseCase", () => {
   const makeValidatorStub = (): IValidator => ({
     validate: resolveValue({ isValid: true, data: "user@email.com" }),
   });
 
-  const makeRepositoryStub = (): IFindUserRepository => ({
-    findByEmail: resolveValue(makeFakeUser()),
-  });
-
-  const makeSUT = (validator: IValidator, repository: IFindUserRepository) =>
+  const makeSUT = (validator: IValidator, repository: IFindUsersRepository) =>
     new FindUserByEmailUseCase(validator, repository);
 
   let sut: IFindUserByEmailUseCase;
   let validator: IValidator;
-  let repository: IFindUserRepository;
+  let repository: IFindUsersRepository;
 
   beforeEach(() => {
     validator = makeValidatorStub();
-    repository = makeRepositoryStub();
+    repository = makeFindUsersRepositoryStub();
 
     sut = makeSUT(validator, repository);
 

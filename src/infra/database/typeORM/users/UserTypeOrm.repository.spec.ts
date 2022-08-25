@@ -29,9 +29,10 @@ describe("User Repository - TypeORM", () => {
     await repository.clear();
 
     repository.create = jest.fn().mockReturnValue(makeFakeUser());
+    repository.save = resolveValue(makeFakeUser());
     repository.find = jest.fn().mockReturnValue([makeFakeUser()]);
     repository.findOneBy = jest.fn().mockReturnValue(makeFakeUser());
-    repository.save = resolveValue(makeFakeUser());
+    repository.delete = resolveValue({ affected: true });
   });
 
   afterAll(async () => await ds.destroy());
@@ -79,6 +80,24 @@ describe("User Repository - TypeORM", () => {
     });
   });
 
+  describe("findById()", () => {
+    it("should call findOneBy() method from typeORM repository with correct values", async () => {
+      await sut.findById("valid_id");
+      expect(repository.findOneBy).toHaveBeenCalledWith({
+        id: "valid_id",
+      });
+    });
+
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.findOneBy = rejectValueOnce(new Error());
+      expect(sut.findById("valid_id")).rejects.toThrow(new Error());
+    });
+
+    it("should return an User instance when operation succeeds", async () => {
+      expect(sut.findById("valid_id")).resolves.toEqual(makeFakeUser());
+    });
+  });
+
   describe("findAll()", () => {
     it("should call findAll() method from typeORM repository with correct values", async () => {
       await sut.findAll();
@@ -97,6 +116,22 @@ describe("User Repository - TypeORM", () => {
     it("should return an empty array when operation succeeds but no user is found", async () => {
       repository.find = resolveValueOnce([]);
       expect(sut.findAll()).resolves.toEqual([]);
+    });
+  });
+
+  describe("delete()", () => {
+    it("should call delete() method from typeORM repository with correct values", async () => {
+      await sut.delete("valid_id");
+      expect(repository.delete).toHaveBeenCalledWith({ id: "valid_id" });
+    });
+
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.delete = rejectValueOnce(new Error());
+      expect(sut.delete("error")).rejects.toThrow(new Error());
+    });
+
+    it("should return true when operation succeeds", async () => {
+      expect(sut.delete("valid_id")).resolves.toEqual(true);
     });
   });
 });

@@ -1,27 +1,20 @@
 import { makeFakeUser } from "src/__tests__/utils/UserMocks.factory";
-import {
-  rejectValueOnce,
-  resolveValue,
-} from "src/__tests__/utils/jest/MockReturnValues.factory";
+import { rejectValueOnce } from "src/__tests__/utils/jest/MockReturnValues.factory";
+import { makeFindUsersRepositoryStub } from "src/__tests__/utils/typeORM/FindUsersRepository.factory";
 
-import { IFindAllUsersUseCase } from "src/domain/useCases/users/read/FindAllUsers.interface";
-
-import { IFindAllUsersRepository } from "src/data/protocols/database/FindAllUsersRepository.interface";
 import { FindAllUsersUseCase } from "./FindAllUsers.usecase";
+import { IFindAllUsersUseCase } from "src/domain/useCases/users/read/FindAllUsers.interface";
+import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepository.interface";
 
 describe("Find All Users UseCase", () => {
-  const makeRepositoryStub = (): IFindAllUsersRepository => ({
-    findAll: resolveValue([makeFakeUser()]),
-  });
-
-  const makeSUT = (repository: IFindAllUsersRepository) =>
+  const makeSUT = (repository: IFindUsersRepository) =>
     new FindAllUsersUseCase(repository);
 
   let sut: IFindAllUsersUseCase;
-  let repository: IFindAllUsersRepository;
+  let repository: IFindUsersRepository;
 
   beforeEach(() => {
-    repository = makeRepositoryStub();
+    repository = makeFindUsersRepositoryStub();
     sut = makeSUT(repository);
   });
 
