@@ -5,6 +5,7 @@ import {
 import {
   rejectValueOnce,
   resolveValue,
+  resolveValueOnce,
 } from "src/__tests__/utils/jest/MockReturnValues.factory";
 import { makeDataSource } from "src/__tests__/utils/typeORM/DataSource.factory";
 
@@ -28,6 +29,7 @@ describe("User Repository - TypeORM", () => {
     await repository.clear();
 
     repository.create = jest.fn().mockReturnValue(makeFakeUser());
+    repository.find = jest.fn().mockReturnValue([makeFakeUser()]);
     repository.findOneBy = jest.fn().mockReturnValue(makeFakeUser());
     repository.save = resolveValue(makeFakeUser());
   });
@@ -74,6 +76,27 @@ describe("User Repository - TypeORM", () => {
       expect(sut.findByEmail("user@email.com")).resolves.toEqual(
         makeFakeUser()
       );
+    });
+  });
+
+  describe("findAll()", () => {
+    it("should call findAll() method from typeORM repository with correct values", async () => {
+      await sut.findAll();
+      expect(repository.find).toHaveBeenCalledTimes(1);
+    });
+
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.find = rejectValueOnce(new Error());
+      expect(sut.findAll()).rejects.toThrow(new Error());
+    });
+
+    it("should return an array of User instances when operation succeeds", async () => {
+      expect(sut.findAll()).resolves.toEqual([makeFakeUser()]);
+    });
+
+    it("should return an empty array when operation succeeds but no user is found", async () => {
+      repository.find = resolveValueOnce([]);
+      expect(sut.findAll()).resolves.toEqual([]);
     });
   });
 });
