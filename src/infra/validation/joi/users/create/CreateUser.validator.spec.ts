@@ -1,4 +1,4 @@
-import { makeFakeUserInput } from "src/__tests__/utils/UserMocks.factory";
+import { makeFakeCreateUserInput } from "src/__tests__/utils/UserMocks.factory";
 
 import { CreateUserValidator } from "./CreateUser.validator";
 import { options } from "src/infra/validation/joi/config/Joi.options";
@@ -7,7 +7,7 @@ import { CreateUserJoiSchema } from "src/infra/validation/joi/schemas/CreateUser
 describe("CreateUser Validator", () => {
   const sut = new CreateUserValidator(CreateUserJoiSchema);
   const validateSpy = jest.spyOn(CreateUserJoiSchema, "validate");
-  const fakeUserInputData = makeFakeUserInput();
+  const fakeUserInputData = makeFakeCreateUserInput();
 
   it("should call validate() method with correct values", () => {
     sut.validate(fakeUserInputData);
@@ -17,7 +17,7 @@ describe("CreateUser Validator", () => {
   it("should return a validation result with user data when validation succeeds", () => {
     expect(sut.validate(fakeUserInputData)).toEqual({
       isValid: true,
-      data: makeFakeUserInput(),
+      data: makeFakeCreateUserInput(),
     });
   });
 

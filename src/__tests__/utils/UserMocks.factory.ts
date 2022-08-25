@@ -3,6 +3,10 @@ import {
   ICreateUserDto,
   ICreateUserInput,
 } from "src/domain/dto/users/CreateUser.dto";
+import {
+  IUpdateUserDto,
+  IUpdateUserInput,
+} from "src/domain/dto/users/UpdateUser.dto";
 
 export const makeFakeUserDto = (): ICreateUserDto => ({
   name: "valid_name",
@@ -11,9 +15,22 @@ export const makeFakeUserDto = (): ICreateUserDto => ({
   phone: "12345678902",
 });
 
-export const makeFakeUserInput = (): ICreateUserInput => ({
+export const makeFakeCreateUserInput = (): ICreateUserInput => ({
   ...makeFakeUserDto(),
   passwordConfirmation: "secret123",
+});
+
+export const makeFakeUpdateUserInput = (): IUpdateUserInput => ({
+  id: "valid_id",
+  name: "valid_name",
+  email: "user@email.com",
+  phone: "12345678902",
+});
+
+export const makeFakeUpdateUserDto = (): IUpdateUserDto => ({
+  name: "valid_name",
+  email: "user@email.com",
+  phone: "12345678902",
 });
 
 export const makeFakeUser = (): IUserModel => ({

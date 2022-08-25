@@ -1,7 +1,7 @@
 import {
   makeFakeUser,
   makeFakeUserDto,
-  makeFakeUserInput,
+  makeFakeCreateUserInput,
 } from "src/__tests__/utils/UserMocks.factory";
 import {
   rejectValueOnce,
@@ -21,7 +21,7 @@ import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepos
 
 describe("Create User UseCase", () => {
   const makeValidatorStub = (): IValidator => ({
-    validate: resolveValue({ isValid: true, data: makeFakeUserInput() }),
+    validate: resolveValue({ isValid: true, data: makeFakeCreateUserInput() }),
   });
 
   const makeEncrypterStub = (): IEncrypter => ({
@@ -61,12 +61,12 @@ describe("Create User UseCase", () => {
 
   describe("Dependency: Validator", () => {
     it("should call validate() method from validator with correct values", async () => {
-      await sut.execute(makeFakeUserInput());
-      expect(validator.validate).toBeCalledWith(makeFakeUserInput());
+      await sut.execute(makeFakeCreateUserInput());
+      expect(validator.validate).toBeCalledWith(makeFakeCreateUserInput());
     });
 
     it("should continue method execution when validation succeeds", async () => {
-      await sut.execute(makeFakeUserInput());
+      await sut.execute(makeFakeCreateUserInput());
 
       expect(encrypter.hash).toHaveBeenCalledTimes(1);
       expect(repository.create).toHaveBeenCalledTimes(1);
@@ -78,7 +78,7 @@ describe("Create User UseCase", () => {
         data: ["validation_error"],
       });
 
-      expect(sut.execute(makeFakeUserInput())).rejects.toEqual(
+      expect(sut.execute(makeFakeCreateUserInput())).rejects.toEqual(
         new ValidationError(["validation_error"])
       );
     });

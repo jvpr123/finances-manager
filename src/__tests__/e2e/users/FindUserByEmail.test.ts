@@ -3,11 +3,11 @@ import { DataSource } from "typeorm";
 
 import { makeDataSource } from "src/__tests__/utils/typeORM/DataSource.factory";
 import { User } from "src/infra/database/typeORM/users/User.entity";
-import { makeFakeUserInput } from "src/__tests__/utils/UserMocks.factory";
+import { makeFakeCreateUserInput } from "src/__tests__/utils/UserMocks.factory";
 
 describe("Find User by Email (GET /users/:email)", () => {
   const req = request("http://localhost:3030/dev/users");
-  const userInput = makeFakeUserInput();
+  const userInput = makeFakeCreateUserInput();
   let ds: DataSource;
 
   beforeAll(async () => {

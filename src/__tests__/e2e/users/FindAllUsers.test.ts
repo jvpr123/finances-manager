@@ -3,7 +3,7 @@ import { DataSource } from "typeorm";
 
 import { makeDataSource } from "src/__tests__/utils/typeORM/DataSource.factory";
 import { User } from "src/infra/database/typeORM/users/User.entity";
-import { makeFakeUserInput } from "src/__tests__/utils/UserMocks.factory";
+import { makeFakeCreateUserInput } from "src/__tests__/utils/UserMocks.factory";
 
 describe("Find All Users (GET /users)", () => {
   const req = request("http://localhost:3030/dev/users");
@@ -11,7 +11,7 @@ describe("Find All Users (GET /users)", () => {
 
   beforeAll(async () => {
     ds = await makeDataSource();
-    await req.post("/").send(makeFakeUserInput());
+    await req.post("/").send(makeFakeCreateUserInput());
   });
 
   afterEach(async () => ds.getRepository<User>(User).clear());

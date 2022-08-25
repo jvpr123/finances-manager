@@ -3,12 +3,12 @@ import { DataSource } from "typeorm";
 
 import { makeDataSource } from "src/__tests__/utils/typeORM/DataSource.factory";
 import { User } from "src/infra/database/typeORM/users/User.entity";
-import { makeFakeUserInput } from "src/__tests__/utils/UserMocks.factory";
+import { makeFakeCreateUserInput } from "src/__tests__/utils/UserMocks.factory";
 import { IUserModel } from "../../../domain/models/User.model";
 
 describe("Delete User (DELETE /users/:id)", () => {
   const req = request("http://localhost:3030/dev/users");
-  const userInput = makeFakeUserInput();
+  const userInput = makeFakeCreateUserInput();
 
   let ds: DataSource;
   let userData: Omit<IUserModel, "password">;
