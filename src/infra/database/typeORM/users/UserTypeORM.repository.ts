@@ -1,13 +1,18 @@
-import { IUserModel } from "src/domain/models/User.model";
-import { ICreateUserDto } from "src/domain/dto/users/CreateUser.dto";
-import { ICreateUserRepository } from "src/data/protocols/database/CreateUserRepository.interface";
-
 import { Repository } from "typeorm";
 import { User } from "./User.entity";
+
+import { IUserModel } from "src/domain/models/User.model";
+import { ICreateUserDto } from "src/domain/dto/users/CreateUser.dto";
+
 import { IFindUserRepository } from "src/data/protocols/database/FindUserRepository.interface";
+import { ICreateUserRepository } from "src/data/protocols/database/CreateUserRepository.interface";
+import { IFindAllUsersRepository } from "src/data/protocols/database/FindAllUsersRepository.interface";
 
 export class UserTypeOrmRepository
-  implements ICreateUserRepository, IFindUserRepository
+  implements
+    ICreateUserRepository,
+    IFindUserRepository,
+    IFindAllUsersRepository
 {
   constructor(private repository: Repository<User>) {}
 
@@ -18,5 +23,9 @@ export class UserTypeOrmRepository
 
   async findByEmail(email: string): Promise<Omit<IUserModel, "password">> {
     return await this.repository.findOneBy({ email });
+  }
+
+  async findAll(): Promise<Omit<IUserModel, "password">[]> {
+    return await this.repository.find();
   }
 }
