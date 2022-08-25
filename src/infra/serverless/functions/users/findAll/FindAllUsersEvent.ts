@@ -1,12 +1,12 @@
 import { handlerPath } from "@libs/handler-resolver";
 
 export default {
-  handler: `${handlerPath(__dirname)}/handler.main`,
+  handler: `${handlerPath(__dirname)}/FindAllUsersHandler.handler`,
   events: [
     {
       http: {
         method: "get",
-        path: "hello",
+        path: "users",
       },
     },
   ],
