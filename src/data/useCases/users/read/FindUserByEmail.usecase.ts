@@ -1,7 +1,7 @@
 import { IUserModel } from "src/domain/models/User.model";
 
 import { IValidator } from "src/data/protocols/validation/Validator.interface";
-import { IFindUserRepository } from "src/data/protocols/database/FindUserRepository.interface";
+import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepository.interface";
 
 import { IFindUserByEmailUseCase } from "src/domain/useCases/users/read/FindUserByEmail.interface";
 
@@ -11,7 +11,7 @@ import { NotFoundError } from "src/errors/NotFound.error";
 export class FindUserByEmailUseCase implements IFindUserByEmailUseCase {
   constructor(
     private readonly validator: IValidator,
-    private readonly repository: IFindUserRepository
+    private readonly repository: IFindUsersRepository
   ) {}
 
   async execute(email: string): Promise<Partial<IUserModel>> {

@@ -4,15 +4,12 @@ import { User } from "./User.entity";
 import { IUserModel } from "src/domain/models/User.model";
 import { ICreateUserDto } from "src/domain/dto/users/CreateUser.dto";
 
-import { IFindUserRepository } from "src/data/protocols/database/FindUserRepository.interface";
+import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepository.interface";
 import { ICreateUserRepository } from "src/data/protocols/database/CreateUserRepository.interface";
-import { IFindAllUsersRepository } from "src/data/protocols/database/FindAllUsersRepository.interface";
+import { IDeleteUserRepository } from "src/data/protocols/database/DeleteUserRepository.interface";
 
 export class UserTypeOrmRepository
-  implements
-    ICreateUserRepository,
-    IFindUserRepository,
-    IFindAllUsersRepository
+  implements ICreateUserRepository, IFindUsersRepository, IDeleteUserRepository
 {
   constructor(private repository: Repository<User>) {}
 
@@ -25,7 +22,16 @@ export class UserTypeOrmRepository
     return await this.repository.findOneBy({ email });
   }
 
+  async findById(id: string): Promise<Omit<IUserModel, "password">> {
+    return await this.repository.findOneBy({ id });
+  }
+
   async findAll(): Promise<Omit<IUserModel, "password">[]> {
     return await this.repository.find();
+  }
+
+  async delete(id: string): Promise<boolean> {
+    const result = await this.repository.delete({ id });
+    return result.affected ? true : false;
   }
 }

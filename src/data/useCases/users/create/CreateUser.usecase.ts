@@ -6,13 +6,13 @@ import { IEncrypter } from "src/data/protocols/cryptography/Encrypter.interface"
 import { ICreateUserRepository } from "src/data/protocols/database/CreateUserRepository.interface";
 
 import { ValidationError } from "src/errors/Validation.error";
-import { IFindUserRepository } from "src/data/protocols/database/FindUserRepository.interface";
+import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepository.interface";
 
 export class CreateUserUseCase implements ICreateUserUseCase {
   constructor(
     private readonly validator: IValidator,
     private readonly encrypter: IEncrypter,
-    private readonly repository: ICreateUserRepository & IFindUserRepository
+    private readonly repository: ICreateUserRepository & IFindUsersRepository
   ) {}
 
   async execute(input: any): Promise<Partial<IUserModel>> {
