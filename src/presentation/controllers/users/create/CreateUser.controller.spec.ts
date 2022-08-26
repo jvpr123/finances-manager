@@ -1,5 +1,5 @@
 import { makeFakeUser } from "src/__tests__/utils/UserMocks.factory";
-import { makeFakeCreateUserRequest } from "src/__tests__/utils/http/HttpMocks.factory";
+import { makeFakeCreateUserRequest } from "src/__tests__/utils/http/users/HttpUsersMocks.factory";
 import { rejectValueOnce } from "src/__tests__/utils/jest/MockReturnValues.factory";
 
 import { ICreateUserUseCase } from "src/domain/useCases/users/create/CreateUser.interface";

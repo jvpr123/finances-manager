@@ -16,8 +16,8 @@ import { IValidator } from "src/data/protocols//validation/Validator.interface";
 import { IEncrypter } from "src/data/protocols/cryptography/Encrypter.interface";
 
 import { ValidationError } from "src/errors/Validation.error";
-import { ICreateUserRepository } from "src/data/protocols/database/CreateUserRepository.interface";
-import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepository.interface";
+import { ICreateUserRepository } from "src/data/protocols/database/users/CreateUserRepository.interface";
+import { IFindUsersRepository } from "src/data/protocols/database/users/FindUsersRepository.interface";
 
 describe("Create User UseCase", () => {
   const makeValidatorStub = (): IValidator => ({

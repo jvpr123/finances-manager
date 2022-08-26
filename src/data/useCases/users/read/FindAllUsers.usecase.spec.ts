@@ -1,10 +1,11 @@
 import { makeFakeUser } from "src/__tests__/utils/UserMocks.factory";
 import { rejectValueOnce } from "src/__tests__/utils/jest/MockReturnValues.factory";
-import { makeFindUsersRepositoryStub } from "src/__tests__/utils/typeORM/FindUsersRepository.factory";
+import { makeFindUsersRepositoryStub } from "src/__tests__/utils/typeORM/users/FindUsersRepository.factory";
 
 import { FindAllUsersUseCase } from "./FindAllUsers.usecase";
+
 import { IFindAllUsersUseCase } from "src/domain/useCases/users/read/FindAllUsers.interface";
-import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepository.interface";
+import { IFindUsersRepository } from "src/data/protocols/database/users/FindUsersRepository.interface";
 
 describe("Find All Users UseCase", () => {
   const makeSUT = (repository: IFindUsersRepository) =>

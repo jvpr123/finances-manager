@@ -1,7 +1,7 @@
 import { IUserModel } from "src/domain/models/User.model";
 import { IFindAllUsersUseCase } from "src/domain/useCases/users/read/FindAllUsers.interface";
 
-import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepository.interface";
+import { IFindUsersRepository } from "src/data/protocols/database/users/FindUsersRepository.interface";
 
 export class FindAllUsersUseCase implements IFindAllUsersUseCase {
   constructor(private readonly repository: IFindUsersRepository) {}

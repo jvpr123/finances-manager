@@ -1,8 +1,8 @@
 import { JoiValidatorAdapter } from "src/infra/validation/joi/JoiValidator.adapter";
+import { UpdateUserJoiSchema } from "src/infra/validation/joi/schemas/users/UpdateUser.schema";
 
 import { User } from "src/infra/database/typeORM/users/User.entity";
 import { TypeOrmDataSource } from "src/infra/database/typeORM/DataSource.config";
-import { UpdateUserJoiSchema } from "src/infra/validation/joi/schemas/users/UpdateUser.schema";
 import { UserTypeOrmRepository } from "src/infra/database/typeORM/users/UserTypeORM.repository";
 
 import { UpdateUserUseCase } from "src/data/useCases/users/update/UpdateUser.usecase";

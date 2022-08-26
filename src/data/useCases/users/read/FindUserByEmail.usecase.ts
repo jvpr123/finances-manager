@@ -1,7 +1,7 @@
 import { IUserModel } from "src/domain/models/User.model";
 
 import { IValidator } from "src/data/protocols/validation/Validator.interface";
-import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepository.interface";
+import { IFindUsersRepository } from "src/data/protocols/database/users/FindUsersRepository.interface";
 
 import { IFindUserByEmailUseCase } from "src/domain/useCases/users/read/FindUserByEmail.interface";
 

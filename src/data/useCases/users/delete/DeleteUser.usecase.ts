@@ -1,7 +1,7 @@
 import { IDeleteUserUseCase } from "src/domain/useCases/users/delete/DeleteUser.interface";
 
-import { IDeleteUserRepository } from "src/data/protocols/database/DeleteUserRepository.interface";
-import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepository.interface";
+import { IDeleteUserRepository } from "src/data/protocols/database/users/DeleteUserRepository.interface";
+import { IFindUsersRepository } from "src/data/protocols/database/users/FindUsersRepository.interface";
 
 import { NotFoundError } from "src/errors/NotFound.error";
 

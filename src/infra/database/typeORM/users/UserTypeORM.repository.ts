@@ -5,10 +5,10 @@ import { IUserModel } from "src/domain/models/User.model";
 import { ICreateUserDto } from "src/domain/dto/users/CreateUser.dto";
 import { IUpdateUserInput } from "src/domain/dto/users/UpdateUser.dto";
 
-import { ICreateUserRepository } from "src/data/protocols/database/CreateUserRepository.interface";
-import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepository.interface";
-import { IUpdateUserRepository } from "src/data/protocols/database/UpdateUser.interface";
-import { IDeleteUserRepository } from "src/data/protocols/database/DeleteUserRepository.interface";
+import { ICreateUserRepository } from "src/data/protocols/database/users/CreateUserRepository.interface";
+import { IFindUsersRepository } from "src/data/protocols/database/users/FindUsersRepository.interface";
+import { IUpdateUserRepository } from "src/data/protocols/database/users/UpdateUser.interface";
+import { IDeleteUserRepository } from "src/data/protocols/database/users/DeleteUserRepository.interface";
 
 export class UserTypeOrmRepository
   implements

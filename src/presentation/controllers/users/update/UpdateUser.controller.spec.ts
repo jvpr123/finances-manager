@@ -1,5 +1,5 @@
 import { makeFakeUser } from "src/__tests__/utils/UserMocks.factory";
-import { makeFakeUpdateUserRequest } from "src/__tests__/utils/http/HttpMocks.factory";
+import { makeFakeUpdateUserRequest } from "src/__tests__/utils/http//users/HttpUsersMocks.factory";
 import { rejectValueOnce } from "src/__tests__/utils/jest/MockReturnValues.factory";
 
 import { IController } from "src/presentation/protocols/Controller.interface";
@@ -57,11 +57,11 @@ describe("Update User Controller", () => {
     it("should return a 404 status-code response when use-case throws a Not Found Error", async () => {
       useCase.execute = rejectValueOnce(
         new NotFoundError(
-          `Could not delete: data related to ID invalid_id not found`
+          `Could not update: data related to ID invalid_id not found`
         )
       );
       expect(sut.handle(httpRequest)).resolves.toEqual(
-        notFound(`Could not updated: data related to ID invalid_id not found`)
+        notFound(`Could not update: data related to ID invalid_id not found`)
       );
     });
 

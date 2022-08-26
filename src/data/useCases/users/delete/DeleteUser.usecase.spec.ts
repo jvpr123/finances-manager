@@ -1,4 +1,4 @@
-import { makeFindUsersRepositoryStub } from "../../../../__tests__/utils/typeORM/FindUsersRepository.factory";
+import { makeFindUsersRepositoryStub } from "src/__tests__/utils/typeORM/users/FindUsersRepository.factory";
 import { makeFakeUser } from "src/__tests__/utils/UserMocks.factory";
 import {
   rejectValueOnce,
@@ -6,10 +6,12 @@ import {
   resolveValueOnce,
 } from "src/__tests__/utils/jest/MockReturnValues.factory";
 
-import { NotFoundError } from "../../../../errors/NotFound.error";
-import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepository.interface";
-import { IDeleteUserRepository } from "../../../protocols/database/DeleteUserRepository.interface";
+import { NotFoundError } from "src/errors/NotFound.error";
+
 import { DeleteUserlUseCase } from "./DeleteUser.usecase";
+import { IFindUsersRepository } from "src/data/protocols/database/users/FindUsersRepository.interface";
+import { IDeleteUserRepository } from "src/data/protocols/database/users/DeleteUserRepository.interface";
+
 import { IDeleteUserUseCase } from "src/domain/useCases/users/delete/DeleteUser.interface";
 
 type Repository = IFindUsersRepository & IDeleteUserRepository;

@@ -1,4 +1,4 @@
-import { makeFindUsersRepositoryStub } from "src/__tests__/utils/typeORM/FindUsersRepository.factory";
+import { makeFindUsersRepositoryStub } from "src/__tests__/utils/typeORM/users/FindUsersRepository.factory";
 import { makeFakeUser } from "src/__tests__/utils/UserMocks.factory";
 import {
   rejectValueOnce,
@@ -10,7 +10,7 @@ import { IFindUserByEmailUseCase } from "src/domain/useCases/users/read/FindUser
 
 import { FindUserByEmailUseCase } from "./FindUserByEmail.usecase";
 import { IValidator } from "src/data/protocols/validation/Validator.interface";
-import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepository.interface";
+import { IFindUsersRepository } from "src/data/protocols/database/users/FindUsersRepository.interface";
 
 import { ValidationError } from "src/errors/Validation.error";
 import { NotFoundError } from "src/errors/NotFound.error";
@@ -41,7 +41,7 @@ describe("Find User By Email UseCase", () => {
   describe("Dependency: Validator", () => {
     it("should call validate() method from validator with correct values", async () => {
       await sut.execute("user@email.com");
-      expect(validator.validate).toBeCalledWith("user@email.com");
+      expect(validator.validate).toBeCalledWith({ email: "user@email.com" });
     });
 
     it("should continue method execution when validation succeeds", async () => {

@@ -7,16 +7,16 @@ import {
   resolveValue,
   resolveValueOnce,
 } from "src/__tests__/utils/jest/MockReturnValues.factory";
+import { makeFindUsersRepositoryStub } from "src/__tests__/utils/typeORM/users/FindUsersRepository.factory";
 
 import { ICreateUserUseCase } from "src/domain/useCases/users/create/CreateUser.interface";
 
 import { UpdateUserUseCase } from "./UpdateUser.usecase";
 import { IValidator } from "src/data/protocols//validation/Validator.interface";
-import { IUpdateUserRepository } from "src/data/protocols/database/UpdateUser.interface";
-import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepository.interface";
+import { IUpdateUserRepository } from "src/data/protocols/database/users/UpdateUser.interface";
+import { IFindUsersRepository } from "src/data/protocols/database/users/FindUsersRepository.interface";
 
 import { ValidationError } from "src/errors/Validation.error";
-import { makeFindUsersRepositoryStub } from "src/__tests__/utils/typeORM/FindUsersRepository.factory";
 
 describe("Update User UseCase", () => {
   const makeValidatorStub = (): IValidator => ({
