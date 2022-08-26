@@ -1,11 +1,11 @@
 import { makeFakeCreateUserInput } from "src/__tests__/utils/UserMocks.factory";
 
-import { CreateUserValidator } from "./CreateUser.validator";
 import { options } from "src/infra/validation/joi/config/Joi.options";
-import { CreateUserJoiSchema } from "src/infra/validation/joi/schemas/CreateUser.schema";
+import { CreateUserJoiSchema } from "src/infra/validation/joi/schemas/users/CreateUser.schema";
+import { JoiValidatorAdapter } from "./JoiValidator.adapter";
 
-describe("CreateUser Validator", () => {
-  const sut = new CreateUserValidator(CreateUserJoiSchema);
+describe("Joi Validator Adapter", () => {
+  const sut = new JoiValidatorAdapter(CreateUserJoiSchema);
   const validateSpy = jest.spyOn(CreateUserJoiSchema, "validate");
   const fakeUserInputData = makeFakeCreateUserInput();
 
