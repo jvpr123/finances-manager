@@ -3,13 +3,19 @@ import { User } from "./User.entity";
 
 import { IUserModel } from "src/domain/models/User.model";
 import { ICreateUserDto } from "src/domain/dto/users/CreateUser.dto";
+import { IUpdateUserInput } from "src/domain/dto/users/UpdateUser.dto";
 
-import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepository.interface";
 import { ICreateUserRepository } from "src/data/protocols/database/CreateUserRepository.interface";
+import { IFindUsersRepository } from "src/data/protocols/database/FindUsersRepository.interface";
+import { IUpdateUserRepository } from "src/data/protocols/database/UpdateUser.interface";
 import { IDeleteUserRepository } from "src/data/protocols/database/DeleteUserRepository.interface";
 
 export class UserTypeOrmRepository
-  implements ICreateUserRepository, IFindUsersRepository, IDeleteUserRepository
+  implements
+    ICreateUserRepository,
+    IFindUsersRepository,
+    IUpdateUserRepository,
+    IDeleteUserRepository
 {
   constructor(private repository: Repository<User>) {}
 
@@ -28,6 +34,14 @@ export class UserTypeOrmRepository
 
   async findAll(): Promise<Omit<IUserModel, "password">[]> {
     return await this.repository.find();
+  }
+
+  async update({
+    id,
+    ...data
+  }: IUpdateUserInput): Promise<Omit<IUserModel, "password">> {
+    await this.repository.update({ id }, data);
+    return await this.repository.findOneBy({ id });
   }
 
   async delete(id: string): Promise<boolean> {

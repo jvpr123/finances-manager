@@ -1,6 +1,6 @@
 import { IUserModel } from "src/domain/models/User.model";
-import { IUpdateUserDto } from "src/domain/dto/users/UpdateUser.dto";
+import { IUpdateUserInput } from "src/domain/dto/users/UpdateUser.dto";
 
 export interface IUpdateUserRepository {
-  update(data: IUpdateUserDto): Promise<Omit<IUserModel, "password">>;
+  update(data: IUpdateUserInput): Promise<Omit<IUserModel, "password">>;
 }

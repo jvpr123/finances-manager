@@ -4,5 +4,3 @@ export interface IUpdateUserInput {
   email?: string;
   phone?: string;
 }
-
-export interface IUpdateUserDto extends Omit<IUpdateUserInput, "id"> {}
