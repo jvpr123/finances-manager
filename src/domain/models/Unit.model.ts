@@ -1,8 +1,8 @@
-export interface IManageableUnitModel {
+export interface IUnitModel {
   id: string;
   name: string;
   description: string;
-  intialBalance: number;
+  initialBalance: number;
   currentBalance: number;
   createdAt: Date;
   updatedAt: Date;
