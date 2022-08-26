@@ -10,7 +10,7 @@ import { CreateUnitUseCase } from "src/data/useCases/units/create/CreateUnit.use
 import { IController } from "src/presentation/protocols/Controller.interface";
 import { CreateUnitController } from "src/presentation/controllers/units/create/CreateUnit.controller";
 
-export const makeCreateUserController = (): IController => {
+export const makeCreateUnitController = (): IController => {
   const validator = new JoiValidatorAdapter(CreateUnitJoiSchema);
   const repository = new UnitTypeOrmRepository(
     TypeOrmDataSource.getRepository<Unit>(Unit)

@@ -16,6 +16,9 @@ export class CreateUnitUseCase implements ICreateUnitUseCase {
 
     if (!isValid) throw new ValidationError(data);
 
-    return await this.repository.create(data);
+    return await this.repository.create({
+      ...data,
+      currentBalance: data.initialBalance,
+    });
   }
 }
