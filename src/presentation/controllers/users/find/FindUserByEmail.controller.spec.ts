@@ -1,5 +1,4 @@
 import { makeFakeUser } from "src/__tests__/utils/UserMocks.factory";
-import { makeFakeRequest } from "src/__tests__/utils/http/HttpMocks.factory";
 import { rejectValueOnce } from "src/__tests__/utils/jest/MockReturnValues.factory";
 
 import { IFindUserByEmailUseCase } from "src/domain/useCases/users/read/FindUserByEmail.interface";
@@ -51,7 +50,7 @@ describe("Find User By Email Controller", () => {
 
     it("should return an 400 status-code response when use-case throws a Validation Error", async () => {
       useCase.execute = rejectValueOnce(new ValidationError([]));
-      expect(sut.handle(makeFakeRequest())).resolves.toEqual(badRequest([]));
+      expect(sut.handle({})).resolves.toEqual(badRequest([]));
     });
 
     it("should return an 404 status-code response when use-case return undefined", async () => {
@@ -60,7 +59,7 @@ describe("Find User By Email Controller", () => {
       );
 
       useCase.execute = rejectValueOnce(error);
-      expect(sut.handle(makeFakeRequest())).resolves.toEqual(
+      expect(sut.handle({})).resolves.toEqual(
         notFound(
           `Could not find data related to ${httpRequest.params.email} address`
         )
@@ -70,13 +69,11 @@ describe("Find User By Email Controller", () => {
     it("should return an 500 status-code response when use-case throws general errors", async () => {
       useCase.execute = rejectValueOnce(new Error("error"));
 
-      expect(sut.handle(makeFakeRequest())).resolves.toEqual(
-        internalServerError("error")
-      );
+      expect(sut.handle({})).resolves.toEqual(internalServerError("error"));
     });
 
     it("should return a 200 status-code response when useCase operation succeeds", async () => {
-      expect(sut.handle(makeFakeRequest())).resolves.toEqual(
+      expect(sut.handle(httpRequest)).resolves.toEqual(
         ok({ user: makeFakeUser() })
       );
     });

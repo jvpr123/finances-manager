@@ -1,4 +1,3 @@
-import { makeFakeRequest } from "src/__tests__/utils/http/HttpMocks.factory";
 import { rejectValueOnce } from "src/__tests__/utils/jest/MockReturnValues.factory";
 
 import { IDeleteUserUseCase } from "src/domain/useCases/users/delete/DeleteUser.interface";
@@ -53,7 +52,7 @@ describe("Delete User Controller", () => {
       );
 
       useCase.execute = rejectValueOnce(error);
-      expect(sut.handle(makeFakeRequest())).resolves.toEqual(
+      expect(sut.handle({})).resolves.toEqual(
         notFound(
           `Could not delete: data related to ID ${httpRequest.params.id} not found`
         )
@@ -63,15 +62,11 @@ describe("Delete User Controller", () => {
     it("should return an 500 status-code response when use-case throws general errors", async () => {
       useCase.execute = rejectValueOnce(new Error("error"));
 
-      expect(sut.handle(makeFakeRequest())).resolves.toEqual(
-        internalServerError("error")
-      );
+      expect(sut.handle({})).resolves.toEqual(internalServerError("error"));
     });
 
     it("should return a 200 status-code response when useCase operation succeeds", async () => {
-      expect(sut.handle(makeFakeRequest())).resolves.toEqual(
-        ok({ isDeleted: true })
-      );
+      expect(sut.handle({})).resolves.toEqual(ok({ isDeleted: true }));
     });
   });
 });

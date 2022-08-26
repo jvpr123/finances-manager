@@ -1,11 +1,18 @@
-import { makeFakeCreateUserInput } from "../UserMocks.factory";
+import {
+  makeFakeCreateUserInput,
+  makeFakeUpdateUserInput,
+} from "../UserMocks.factory";
 import {
   IHttpRequest,
   IHttpResponse,
 } from "src/presentation/protocols/Http.interface";
 
-export const makeFakeRequest = (): IHttpRequest => ({
+export const makeFakeCreateUserRequest = (): IHttpRequest => ({
   body: { ...makeFakeCreateUserInput() },
+});
+
+export const makeFakeUpdateUserRequest = (): IHttpRequest => ({
+  body: { ...makeFakeUpdateUserInput() },
 });
 
 export const makeFakeResponse = (

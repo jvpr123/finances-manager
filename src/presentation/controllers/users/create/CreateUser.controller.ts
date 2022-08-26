@@ -14,7 +14,7 @@ export class CreateUserController implements IController {
 
   async handle(request: IHttpRequest): Promise<IHttpResponse> {
     try {
-      const user = await this.createUserUseCase.execute(request.body);
+      const user = await this.createUserUseCase.execute(request?.body);
       return created({ user });
     } catch (error: any) {
       return errorHandler(error);

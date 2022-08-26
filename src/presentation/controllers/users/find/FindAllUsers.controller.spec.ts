@@ -1,11 +1,9 @@
 import { makeFakeUser } from "src/__tests__/utils/UserMocks.factory";
-import { makeFakeRequest } from "src/__tests__/utils/http/HttpMocks.factory";
 import { rejectValueOnce } from "src/__tests__/utils/jest/MockReturnValues.factory";
 
 import { IFindAllUsersUseCase } from "src/domain/useCases/users/read/FindAllUsers.interface";
 
 import { IController } from "src/presentation/protocols/Controller.interface";
-import { IHttpRequest } from "src/presentation/protocols/Http.interface";
 import { FindAllUsersController } from "./FindAllUsers.controller";
 import {
   internalServerError,
@@ -25,8 +23,6 @@ describe("Find All Users Controller", () => {
   let sut: IController;
   let useCase: IFindAllUsersUseCase;
 
-  const httpRequest: IHttpRequest = makeFakeRequest();
-
   beforeEach(() => {
     useCase = makeUseCaseStub();
     sut = makeSUT(useCase);
@@ -34,7 +30,7 @@ describe("Find All Users Controller", () => {
 
   describe("Dependency: FindAllUsersUseCase", () => {
     it("should call execute() method from use-case with correct values", async () => {
-      await sut.handle(httpRequest);
+      await sut.handle({});
       expect(useCase.execute).toHaveBeenCalledWith();
       expect(useCase.execute).toHaveBeenCalledTimes(1);
     });
@@ -43,22 +39,18 @@ describe("Find All Users Controller", () => {
       const errorHandlerSpy = jest.spyOn(errorHandler, "errorHandler");
       useCase.execute = rejectValueOnce(new Error("error"));
 
-      await sut.handle(httpRequest);
+      await sut.handle({});
       expect(errorHandlerSpy).toHaveBeenCalledWith(new Error("error"));
     });
 
     it("should return an 500 status-code response when use-case throws general errors", async () => {
       useCase.execute = rejectValueOnce(new Error("error"));
 
-      expect(sut.handle(makeFakeRequest())).resolves.toEqual(
-        internalServerError("error")
-      );
+      expect(sut.handle({})).resolves.toEqual(internalServerError("error"));
     });
 
     it("should return a 200 status-code response when use-case operation succeeds", async () => {
-      expect(sut.handle(httpRequest)).resolves.toEqual(
-        ok({ users: [makeFakeUser()] })
-      );
+      expect(sut.handle({})).resolves.toEqual(ok({ users: [makeFakeUser()] }));
     });
   });
 });

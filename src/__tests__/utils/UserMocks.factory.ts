@@ -3,10 +3,7 @@ import {
   ICreateUserDto,
   ICreateUserInput,
 } from "src/domain/dto/users/CreateUser.dto";
-import {
-  IUpdateUserDto,
-  IUpdateUserInput,
-} from "src/domain/dto/users/UpdateUser.dto";
+import { IUpdateUserInput } from "src/domain/dto/users/UpdateUser.dto";
 
 export const makeFakeUserDto = (): ICreateUserDto => ({
   name: "valid_name",
@@ -22,12 +19,6 @@ export const makeFakeCreateUserInput = (): ICreateUserInput => ({
 
 export const makeFakeUpdateUserInput = (): IUpdateUserInput => ({
   id: "valid_id",
-  name: "valid_name",
-  email: "user@email.com",
-  phone: "12345678902",
-});
-
-export const makeFakeUpdateUserDto = (): IUpdateUserDto => ({
   name: "valid_name",
   email: "user@email.com",
   phone: "12345678902",
