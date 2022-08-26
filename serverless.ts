@@ -3,6 +3,7 @@ import type { AWS } from "@serverless/typescript";
 import createUser from "@functions/users/create/CreateUserEvent";
 import findUserByEmail from "@functions/users/findByEmail/FindUserByEmailEvent";
 import findAllUsers from "@functions/users/findAll/FindAllUsersEvent";
+import updateUser from "@functions/users/update/UpdateUserEvent";
 import deleteUser from "@functions/users/delete/DeleteUserEvent";
 
 const serverlessConfiguration: AWS = {
@@ -22,7 +23,13 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { createUser, findUserByEmail, findAllUsers, deleteUser },
+  functions: {
+    createUser,
+    findUserByEmail,
+    findAllUsers,
+    updateUser,
+    deleteUser,
+  },
   package: { individually: true },
   custom: {
     esbuild: {

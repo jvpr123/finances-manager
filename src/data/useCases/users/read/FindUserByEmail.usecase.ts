@@ -15,7 +15,7 @@ export class FindUserByEmailUseCase implements IFindUserByEmailUseCase {
   ) {}
 
   async execute(email: string): Promise<Partial<IUserModel>> {
-    const { isValid, data } = this.validator.validate(email);
+    const { isValid, data } = this.validator.validate({ email });
     if (!isValid) throw new ValidationError(data);
 
     const userFound = await this.repository.findByEmail(email);

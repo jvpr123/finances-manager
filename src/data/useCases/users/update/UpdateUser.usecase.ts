@@ -21,7 +21,7 @@ export class UpdateUserUseCase implements IUpdateUserUseCase {
     if (!isValid) throw new ValidationError(data);
     if (!userExists)
       throw new NotFoundError(
-        `Could not delete: data related to ID ${input.id} not found`
+        `Could not update: data related to ID ${input.id} not found`
       );
 
     return await this.repository.update(data);
