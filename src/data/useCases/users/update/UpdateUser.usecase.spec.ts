@@ -1,7 +1,6 @@
 import {
   makeFakeUser,
   makeFakeUpdateUserInput,
-  makeFakeUpdateUserDto,
 } from "src/__tests__/utils/UserMocks.factory";
 import {
   rejectValueOnce,
@@ -21,7 +20,7 @@ import { makeFindUsersRepositoryStub } from "src/__tests__/utils/typeORM/FindUse
 
 describe("Update User UseCase", () => {
   const makeValidatorStub = (): IValidator => ({
-    validate: resolveValue({ isValid: true, data: makeFakeUpdateUserDto() }),
+    validate: resolveValue({ isValid: true, data: makeFakeUpdateUserInput() }),
   });
 
   const makeRepositoryStub = (): IUpdateUserRepository &
@@ -45,7 +44,7 @@ describe("Update User UseCase", () => {
 
     validator.validate = jest
       .fn()
-      .mockReturnValue({ isValid: true, data: makeFakeUpdateUserDto() });
+      .mockReturnValue({ isValid: true, data: makeFakeUpdateUserInput() });
 
     sut = makeSUT(validator, repository);
   });
@@ -77,7 +76,7 @@ describe("Update User UseCase", () => {
   describe("Dependency: Users Repository", () => {
     it("should call update() method from users repository with correct values", async () => {
       await sut.execute(makeFakeUpdateUserInput());
-      expect(repository.update).toHaveBeenCalledWith(makeFakeUpdateUserDto());
+      expect(repository.update).toHaveBeenCalledWith(makeFakeUpdateUserInput());
     });
 
     it("should call findById() method from users repository with correct values", async () => {

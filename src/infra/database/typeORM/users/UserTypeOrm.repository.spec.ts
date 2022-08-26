@@ -1,6 +1,7 @@
 import {
   makeFakeUser,
   makeFakeUserDto,
+  makeFakeUpdateUserInput,
 } from "src/__tests__/utils/UserMocks.factory";
 import {
   rejectValueOnce,
@@ -32,7 +33,8 @@ describe("User Repository - TypeORM", () => {
     repository.save = resolveValue(makeFakeUser());
     repository.find = jest.fn().mockReturnValue([makeFakeUser()]);
     repository.findOneBy = jest.fn().mockReturnValue(makeFakeUser());
-    repository.delete = resolveValue({ affected: true });
+    repository.update = resolveValue({ affected: 1 });
+    repository.delete = resolveValue({ affected: 1 });
   });
 
   afterAll(async () => await ds.destroy());
@@ -116,6 +118,36 @@ describe("User Repository - TypeORM", () => {
     it("should return an empty array when operation succeeds but no user is found", async () => {
       repository.find = resolveValueOnce([]);
       expect(sut.findAll()).resolves.toEqual([]);
+    });
+  });
+
+  describe("update()", () => {
+    const userData = makeFakeUpdateUserInput();
+
+    it("should call update() method from typeORM repository with correct values", async () => {
+      const { id, ...data } = userData;
+
+      await sut.update(userData);
+      expect(repository.update).toHaveBeenCalledWith({ id }, data);
+    });
+
+    it("should call findOneBy() method from typeORM repository with correct values", async () => {
+      await sut.update(userData);
+
+      expect(repository.findOneBy).toHaveBeenCalledWith({ id: userData.id });
+    });
+
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.update = rejectValueOnce(new Error());
+      expect(sut.update(makeFakeUpdateUserInput())).rejects.toThrow(
+        new Error()
+      );
+    });
+
+    it("should return an User instance when operation succeeds", async () => {
+      expect(sut.update(makeFakeUpdateUserInput())).resolves.toEqual(
+        makeFakeUser()
+      );
     });
   });
 
