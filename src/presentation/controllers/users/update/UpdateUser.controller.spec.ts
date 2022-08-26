@@ -61,7 +61,7 @@ describe("Update User Controller", () => {
         )
       );
       expect(sut.handle(httpRequest)).resolves.toEqual(
-        notFound(`Could not delete: data related to ID invalid_id not found`)
+        notFound(`Could not updated: data related to ID invalid_id not found`)
       );
     });
 
