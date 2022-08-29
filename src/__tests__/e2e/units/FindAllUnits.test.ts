@@ -5,7 +5,7 @@ import { makeDataSource } from "src/__tests__/utils/typeORM/DataSource.factory";
 import { Unit } from "src/infra/database/typeORM/units/Unit.entity";
 import { makeFakeCreateUnitDto } from "src/__tests__/utils/UnitMocks.factory";
 
-describe("Find Unit by Name (GET /users/:name)", () => {
+describe("Find Unit by Name (GET /units/:name)", () => {
   const req = request("http://localhost:3030/dev/units");
   const userInput = makeFakeCreateUnitDto();
   let ds: DataSource;
