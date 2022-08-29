@@ -7,6 +7,7 @@ import {
 import {
   rejectValueOnce,
   resolveValue,
+  resolveValueOnce,
 } from "src/__tests__/utils/jest/MockReturnValues.factory";
 import { makeDataSource } from "src/__tests__/utils/typeORM/DataSource.factory";
 
@@ -32,6 +33,7 @@ describe("Unit Repository - TypeORM", () => {
     repository.create = jest.fn().mockReturnValue(makeFakeUnit());
     repository.save = resolveValue(makeFakeUnit());
     repository.findOneBy = resolveValue(makeFakeUnit());
+    repository.find = resolveValue([makeFakeUnit()]);
   });
 
   afterAll(async () => await ds.destroy());
@@ -75,26 +77,26 @@ describe("Unit Repository - TypeORM", () => {
     });
   });
 
-  // describe("findAll()", () => {
-  //   it("should call findAll() method from typeORM repository with correct values", async () => {
-  //     await sut.findAll();
-  //     expect(repository.find).toHaveBeenCalledTimes(1);
-  //   });
+  describe("findAll()", () => {
+    it("should call findAll() method from typeORM repository with correct values", async () => {
+      await sut.findAll();
+      expect(repository.find).toHaveBeenCalledTimes(1);
+    });
 
-  //   it("should throw an error when typeORM repository throws", async () => {
-  //     repository.find = rejectValueOnce(new Error());
-  //     expect(sut.findAll()).rejects.toThrow(new Error());
-  //   });
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.find = rejectValueOnce(new Error());
+      expect(sut.findAll()).rejects.toThrow(new Error());
+    });
 
-  //   it("should return an array of User instances when operation succeeds", async () => {
-  //     expect(sut.findAll()).resolves.toEqual([makeFakeUser()]);
-  //   });
+    it("should return an array of Unit instances when operation succeeds", async () => {
+      expect(sut.findAll()).resolves.toEqual([makeFakeUnit()]);
+    });
 
-  //   it("should return an empty array when operation succeeds but no user is found", async () => {
-  //     repository.find = resolveValueOnce([]);
-  //     expect(sut.findAll()).resolves.toEqual([]);
-  //   });
-  // });
+    it("should return an empty array when operation succeeds but no unit is found", async () => {
+      repository.find = resolveValueOnce([]);
+      expect(sut.findAll()).resolves.toEqual([]);
+    });
+  });
 
   // describe("update()", () => {
   //   const unitData = makeFakeUpdateUserInput();

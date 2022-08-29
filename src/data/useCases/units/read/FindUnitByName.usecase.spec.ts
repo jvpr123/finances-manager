@@ -67,7 +67,7 @@ describe("Find Unit By Name UseCase", () => {
   });
 
   describe("Dependency: Units Repository", () => {
-    it("should call findByName() method from ubits repository with correct values", async () => {
+    it("should call findByName() method from units repository with correct values", async () => {
       await sut.execute("unit_name");
       expect(repository.findByName).toHaveBeenCalledWith("unit_name");
     });
