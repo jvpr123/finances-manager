@@ -65,10 +65,13 @@ describe("Create Unit UseCase", () => {
     });
   });
 
-  describe("Dependency: Users Repository", () => {
-    it("should call create() method from users repository with correct values", async () => {
+  describe("Dependency: Units Repository", () => {
+    it("should call create() method from units repository with correct values", async () => {
       await sut.execute(makeFakeCreateUnitDto());
-      expect(repository.create).toHaveBeenCalledWith(makeFakeCreateUnitDto());
+      expect(repository.create).toHaveBeenCalledWith({
+        ...makeFakeCreateUnitDto(),
+        currentBalance: 0,
+      });
     });
 
     // it("should call findByEmail() method from users repository with correct values", async () => {

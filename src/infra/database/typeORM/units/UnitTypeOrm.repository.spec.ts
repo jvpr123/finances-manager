@@ -31,6 +31,7 @@ describe("Unit Repository - TypeORM", () => {
 
     repository.create = jest.fn().mockReturnValue(makeFakeUnit());
     repository.save = resolveValue(makeFakeUnit());
+    repository.findOneBy = resolveValue(makeFakeUnit());
   });
 
   afterAll(async () => await ds.destroy());
@@ -56,43 +57,23 @@ describe("Unit Repository - TypeORM", () => {
     });
   });
 
-  // describe("findByEmail()", () => {
-  //   it("should call findOneBy() method from typeORM repository with correct values", async () => {
-  //     await sut.findByEmail("user@email.com");
-  //     expect(repository.findOneBy).toHaveBeenCalledWith({
-  //       email: "user@email.com",
-  //     });
-  //   });
+  describe("findByName()", () => {
+    it("should call findOneBy() method from typeORM repository with correct values", async () => {
+      await sut.findByName("unit_name");
+      expect(repository.findOneBy).toHaveBeenCalledWith({
+        name: "unit_name",
+      });
+    });
 
-  //   it("should throw an error when typeORM repository throws", async () => {
-  //     repository.findOneBy = rejectValueOnce(new Error());
-  //     expect(sut.findByEmail("user@email.com")).rejects.toThrow(new Error());
-  //   });
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.findOneBy = rejectValueOnce(new Error());
+      expect(sut.findByName("unit_name")).rejects.toThrow(new Error());
+    });
 
-  //   it("should return an User instance when operation succeeds", async () => {
-  //     expect(sut.findByEmail("user@email.com")).resolves.toEqual(
-  //       makeFakeUser()
-  //     );
-  //   });
-  // });
-
-  // describe("findById()", () => {
-  //   it("should call findOneBy() method from typeORM repository with correct values", async () => {
-  //     await sut.findById("valid_id");
-  //     expect(repository.findOneBy).toHaveBeenCalledWith({
-  //       id: "valid_id",
-  //     });
-  //   });
-
-  //   it("should throw an error when typeORM repository throws", async () => {
-  //     repository.findOneBy = rejectValueOnce(new Error());
-  //     expect(sut.findById("valid_id")).rejects.toThrow(new Error());
-  //   });
-
-  //   it("should return an User instance when operation succeeds", async () => {
-  //     expect(sut.findById("valid_id")).resolves.toEqual(makeFakeUser());
-  //   });
-  // });
+    it("should return an Unit instance when operation succeeds", async () => {
+      expect(sut.findByName("unit_name")).resolves.toEqual(makeFakeUnit());
+    });
+  });
 
   // describe("findAll()", () => {
   //   it("should call findAll() method from typeORM repository with correct values", async () => {
