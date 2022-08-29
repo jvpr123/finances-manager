@@ -7,7 +7,7 @@ import { UnitTypeOrmRepository } from "src/infra/database/typeORM/units/UnitType
 
 import { FindAllUnitsUseCase } from "src/data/useCases/units/read/FindAllUnits.usecase";
 
-export const makeFindUnitsController = (): IController => {
+export const makeFindAllUnitsController = (): IController => {
   const repository = new UnitTypeOrmRepository(
     TypeOrmDataSource.getRepository<Unit>(Unit)
   );
