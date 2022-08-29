@@ -2,6 +2,7 @@ import { DataSource, Repository } from "typeorm";
 
 import {
   makeFakeCreateUnitDto,
+  makeFakeUpdateUnitInput,
   makeFakeUnit,
 } from "src/__tests__/utils/UnitMocks.factory";
 import {
@@ -34,6 +35,7 @@ describe("Unit Repository - TypeORM", () => {
     repository.save = resolveValue(makeFakeUnit());
     repository.findOneBy = resolveValue(makeFakeUnit());
     repository.find = resolveValue([makeFakeUnit()]);
+    repository.update = resolveValue(makeFakeUnit());
   });
 
   afterAll(async () => await ds.destroy());
@@ -116,35 +118,30 @@ describe("Unit Repository - TypeORM", () => {
     });
   });
 
-  // describe("update()", () => {
-  //   const unitData = makeFakeUpdateUserInput();
+  describe("update()", () => {
+    const unitData = makeFakeUpdateUnitInput();
 
-  //   it("should call update() method from typeORM repository with correct values", async () => {
-  //     const { id, ...data } = unitData;
+    it("should call update() method from typeORM repository with correct values", async () => {
+      const { id, ...data } = unitData;
 
-  //     await sut.update(unitData);
-  //     expect(repository.update).toHaveBeenCalledWith({ id }, data);
-  //   });
+      await sut.update(unitData);
+      expect(repository.update).toHaveBeenCalledWith({ id }, data);
+    });
 
-  //   it("should call findOneBy() method from typeORM repository with correct values", async () => {
-  //     await sut.update(unitData);
+    it("should call findOneBy() method from typeORM repository with correct values", async () => {
+      await sut.update(unitData);
+      expect(repository.findOneBy).toHaveBeenCalledWith({ id: unitData.id });
+    });
 
-  //     expect(repository.findOneBy).toHaveBeenCalledWith({ id: unitData.id });
-  //   });
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.update = rejectValueOnce(new Error());
+      expect(sut.update(unitData)).rejects.toThrow(new Error());
+    });
 
-  //   it("should throw an error when typeORM repository throws", async () => {
-  //     repository.update = rejectValueOnce(new Error());
-  //     expect(sut.update(makeFakeUpdateUserInput())).rejects.toThrow(
-  //       new Error()
-  //     );
-  //   });
-
-  //   it("should return an User instance when operation succeeds", async () => {
-  //     expect(sut.update(makeFakeUpdateUserInput())).resolves.toEqual(
-  //       makeFakeUser()
-  //     );
-  //   });
-  // });
+    it("should return an Unit instance when operation succeeds", async () => {
+      expect(sut.update(unitData)).resolves.toEqual(makeFakeUnit());
+    });
+  });
 
   // describe("delete()", () => {
   //   it("should call delete() method from typeORM repository with correct values", async () => {
