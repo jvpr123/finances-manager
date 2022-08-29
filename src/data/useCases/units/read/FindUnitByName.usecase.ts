@@ -4,7 +4,7 @@ import { IFindUnitByNameUseCase } from "src/domain/useCases/units/read/IFindUnit
 import { IValidator } from "src/data/protocols/validation/Validator.interface";
 import { IFindUnitsRepository } from "src/data/protocols/database/units/FindUnitsRepository.interface";
 import { ValidationError } from "src/errors/Validation.error";
-import { NotFoundError } from "../../../../errors/NotFound.error";
+import { NotFoundError } from "src/errors/NotFound.error";
 
 export class FindUnitByNameUseCase implements IFindUnitByNameUseCase {
   constructor(

@@ -19,7 +19,7 @@ export class UnitTypeOrmRepository
   }
 
   async findAll(): Promise<IUnitModel[]> {
-    throw new Error("Method not implemented.");
+    return await this.repository.find();
   }
 
   async findByName(name: string): Promise<IUnitModel> {
