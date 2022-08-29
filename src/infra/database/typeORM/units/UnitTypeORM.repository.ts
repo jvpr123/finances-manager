@@ -25,4 +25,8 @@ export class UnitTypeOrmRepository
   async findByName(name: string): Promise<IUnitModel> {
     return await this.repository.findOneBy({ name });
   }
+
+  async findById(id: string): Promise<IUnitModel> {
+    return await this.repository.findOneBy({ id });
+  }
 }
