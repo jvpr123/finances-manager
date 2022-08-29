@@ -2,7 +2,7 @@ import request from "supertest";
 import { DataSource } from "typeorm";
 
 import { makeDataSource } from "src/__tests__/utils/typeORM/DataSource.factory";
-import { User } from "src/infra/database/typeORM/users/User.entity";
+import { Unit } from "src/infra/database/typeORM/units/Unit.entity";
 import { makeFakeCreateUnitDto } from "src/__tests__/utils/UnitMocks.factory";
 
 describe("Find Unit by Name (GET /users/:name)", () => {
@@ -15,7 +15,7 @@ describe("Find Unit by Name (GET /users/:name)", () => {
     await req.post("/").send(userInput);
   });
 
-  afterAll(async () => ds.getRepository<User>(User).clear());
+  afterAll(async () => ds.getRepository<Unit>(Unit).clear());
 
   it("should return 200 with user data when valid name is provided", async () => {
     const response = await req.get(`/${userInput.name}`);

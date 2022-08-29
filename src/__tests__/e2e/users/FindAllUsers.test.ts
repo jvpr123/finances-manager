@@ -16,7 +16,7 @@ describe("Find All Users (GET /users)", () => {
 
   afterEach(async () => ds.getRepository<User>(User).clear());
 
-  it("should return 200 with user data when valid email is provided", async () => {
+  it("should return 200 with users data when request succeeds", async () => {
     const response = await req.get("/");
 
     expect(response.statusCode).toBe(200);
