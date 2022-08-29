@@ -1,8 +1,6 @@
 import { makeFakeUnit } from "src/__tests__/utils/UnitMocks.factory";
-import {
-  rejectValueOnce,
-  resolveValue,
-} from "src/__tests__/utils/jest/MockReturnValues.factory";
+import { rejectValueOnce } from "src/__tests__/utils/jest/MockReturnValues.factory";
+import { makeFindUnitsRepositoryStub } from "src/__tests__/utils/typeORM/units/FindUnitsRepository.factory";
 
 import { IFindAllUnitsUseCase } from "src/domain/useCases/units/read/IFindAllUnits.interface";
 
@@ -10,11 +8,6 @@ import { IFindUnitsRepository } from "src/data/protocols/database/units/FindUnit
 import { FindAllUnitsUseCase } from "./FindAllUnits.usecase";
 
 describe("Find All Units UseCase", () => {
-  const makeRepositoryStub = (): IFindUnitsRepository => ({
-    findAll: resolveValue([makeFakeUnit()]),
-    findByName: resolveValue(makeFakeUnit()),
-  });
-
   const makeSUT = (repository: IFindUnitsRepository): IFindAllUnitsUseCase =>
     new FindAllUnitsUseCase(repository);
 
@@ -22,7 +15,7 @@ describe("Find All Units UseCase", () => {
   let repository: IFindUnitsRepository;
 
   beforeEach(() => {
-    repository = makeRepositoryStub();
+    repository = makeFindUnitsRepositoryStub();
     sut = makeSUT(repository);
   });
 

@@ -77,6 +77,24 @@ describe("Unit Repository - TypeORM", () => {
     });
   });
 
+  describe("findById()", () => {
+    it("should call findOneBy() method from typeORM repository with correct values", async () => {
+      await sut.findById("unit_id");
+      expect(repository.findOneBy).toHaveBeenCalledWith({
+        id: "unit_id",
+      });
+    });
+
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.findOneBy = rejectValueOnce(new Error());
+      expect(sut.findById("unit_name")).rejects.toThrow(new Error());
+    });
+
+    it("should return an Unit instance when operation succeeds", async () => {
+      expect(sut.findById("unit_id")).resolves.toEqual(makeFakeUnit());
+    });
+  });
+
   describe("findAll()", () => {
     it("should call findAll() method from typeORM repository with correct values", async () => {
       await sut.findAll();

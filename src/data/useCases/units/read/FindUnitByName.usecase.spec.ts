@@ -1,7 +1,7 @@
 import { makeFakeUnit } from "src/__tests__/utils/UnitMocks.factory";
+import { makeFindUnitsRepositoryStub } from "src/__tests__/utils/typeORM/units/FindUnitsRepository.factory";
 import {
   rejectValueOnce,
-  resolveValue,
   resolveValueOnce,
 } from "src/__tests__/utils/jest/MockReturnValues.factory";
 
@@ -19,11 +19,6 @@ describe("Find Unit By Name UseCase", () => {
     validate: jest.fn(),
   });
 
-  const makeRepositoryStub = (): IFindUnitsRepository => ({
-    findAll: resolveValue([makeFakeUnit()]),
-    findByName: resolveValue(makeFakeUnit()),
-  });
-
   const makeSUT = (
     validator: IValidator,
     repository: IFindUnitsRepository
@@ -35,7 +30,7 @@ describe("Find Unit By Name UseCase", () => {
 
   beforeEach(() => {
     validator = makeValidatorStub();
-    repository = makeRepositoryStub();
+    repository = makeFindUnitsRepositoryStub();
     sut = makeSUT(validator, repository);
 
     validator.validate = jest

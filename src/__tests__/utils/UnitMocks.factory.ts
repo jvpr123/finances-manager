@@ -1,5 +1,6 @@
 import { IUnitModel } from "src/domain/models/Unit.model";
 import { ICreateUnitInput } from "src/domain/dto/units/ICreateUnit.dto";
+import { IUpdateUnitInput } from "src/domain/dto/units/IUpdateUnit.dto";
 
 export const makeFakeCreateUnitDto = (): ICreateUnitInput => ({
   name: "unit_name",
@@ -7,12 +8,11 @@ export const makeFakeCreateUnitDto = (): ICreateUnitInput => ({
   initialBalance: 0,
 });
 
-// export const makeFakeUpdateUserInput = (): IUpdateUserInput => ({
-//   id: "valid_id",
-//   name: "valid_name",
-//   email: "user@email.com",
-//   phone: "12345678902",
-// });
+export const makeFakeUpdateUnitInput = (): IUpdateUnitInput => ({
+  id: "unit_id",
+  name: "unit_name",
+  description: "unit_description",
+});
 
 export const makeFakeUnit = (): IUnitModel => {
   const data = makeFakeCreateUnitDto();
