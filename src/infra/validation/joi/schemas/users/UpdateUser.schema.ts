@@ -1,15 +1,8 @@
 import * as Joi from "joi";
 
-import {
-  IUpdateUserDto,
-  IUpdateUserInput,
-} from "src/domain/dto/users/UpdateUser.dto";
+import { IUpdateUserInput } from "src/domain/dto/users/UpdateUser.dto";
 
-export const UpdateUserJoiSchema = Joi.object<
-  IUpdateUserDto,
-  true,
-  IUpdateUserInput
->({
+export const UpdateUserJoiSchema = Joi.object<IUpdateUserInput, true>({
   id: Joi.string().uuid().required(),
   name: Joi.string().min(3).max(255).optional(),
   email: Joi.string().email().min(5).max(100).optional(),
