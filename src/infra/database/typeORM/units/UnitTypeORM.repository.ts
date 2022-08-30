@@ -3,6 +3,7 @@ import { Repository } from "typeorm";
 import { ICreateUnitRepository } from "src/data/protocols/database/units/CreateUnitRepository.interface";
 import { IFindUnitsRepository } from "src/data/protocols/database/units/FindUnitsRepository.interface";
 import { IUpdateUnitRepository } from "src/data/protocols/database/units/UpdateUnitRepository.interface";
+import { IDeleteUnitRepository } from "src/data/protocols/database/units/DeleteUnitRepository.interface";
 
 import { ICreateUnitInput } from "src/domain/dto/units/ICreateUnit.dto";
 import { IUpdateUnitInput } from "src/domain/dto/units/IUpdateUnit.dto";
@@ -11,7 +12,11 @@ import { IUnitModel } from "src/domain/models/Unit.model";
 import { Unit } from "./Unit.entity";
 
 export class UnitTypeOrmRepository
-  implements ICreateUnitRepository, IFindUnitsRepository, IUpdateUnitRepository
+  implements
+    ICreateUnitRepository,
+    IFindUnitsRepository,
+    IUpdateUnitRepository,
+    IDeleteUnitRepository
 {
   constructor(private repository: Repository<Unit>) {}
 
@@ -35,5 +40,10 @@ export class UnitTypeOrmRepository
   async update({ id, ...data }: IUpdateUnitInput): Promise<IUnitModel> {
     await this.repository.update({ id }, data);
     return await this.repository.findOneBy({ id });
+  }
+
+  async delete(id: string): Promise<boolean> {
+    const result = await this.repository.delete({ id });
+    return result.affected ? true : false;
   }
 }
