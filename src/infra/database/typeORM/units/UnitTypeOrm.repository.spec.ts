@@ -36,6 +36,7 @@ describe("Unit Repository - TypeORM", () => {
     repository.findOneBy = resolveValue(makeFakeUnit());
     repository.find = resolveValue([makeFakeUnit()]);
     repository.update = resolveValue(makeFakeUnit());
+    repository.delete = resolveValue({ affected: 1 });
   });
 
   afterAll(async () => await ds.destroy());
@@ -143,19 +144,19 @@ describe("Unit Repository - TypeORM", () => {
     });
   });
 
-  // describe("delete()", () => {
-  //   it("should call delete() method from typeORM repository with correct values", async () => {
-  //     await sut.delete("valid_id");
-  //     expect(repository.delete).toHaveBeenCalledWith({ id: "valid_id" });
-  //   });
+  describe("delete()", () => {
+    it("should call delete() method from typeORM repository with correct values", async () => {
+      await sut.delete("valid_id");
+      expect(repository.delete).toHaveBeenCalledWith({ id: "valid_id" });
+    });
 
-  //   it("should throw an error when typeORM repository throws", async () => {
-  //     repository.delete = rejectValueOnce(new Error());
-  //     expect(sut.delete("error")).rejects.toThrow(new Error());
-  //   });
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.delete = rejectValueOnce(new Error());
+      expect(sut.delete("error")).rejects.toThrow(new Error());
+    });
 
-  //   it("should return true when operation succeeds", async () => {
-  //     expect(sut.delete("valid_id")).resolves.toEqual(true);
-  //   });
-  // });
+    it("should return true when operation succeeds", async () => {
+      expect(sut.delete("valid_id")).resolves.toEqual(true);
+    });
+  });
 });
