@@ -30,6 +30,7 @@ describe("Transaction Repository - TypeORM", () => {
     await repository.clear();
     repository.create = jest.fn().mockReturnValue(makeFakeTransaction());
     repository.save = resolveValue(makeFakeTransaction());
+    repository.findOneBy = resolveValue(makeFakeTransaction());
   });
 
   afterAll(async () => await ds.destroy());
@@ -55,6 +56,24 @@ describe("Transaction Repository - TypeORM", () => {
     });
   });
 
+  describe("findById()", () => {
+    it("should call findOneBy() methodwith correct values", async () => {
+      await sut.findById("valid_id");
+      expect(repository.findOneBy).toHaveBeenCalledWith({
+        id: "valid_id",
+      });
+    });
+
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.findOneBy = rejectValueOnce(new Error());
+      expect(sut.findById("valid_id")).rejects.toThrow(new Error());
+    });
+
+    it("should return an Transaction instance when operation succeeds", async () => {
+      expect(sut.findById("valid_id")).resolves.toEqual(makeFakeTransaction());
+    });
+  });
+
   // describe("findByEmail()", () => {
   //   it("should call findOneBy() method from typeORM repository with correct values", async () => {
   //     await sut.findByEmail("user@email.com");
@@ -72,24 +91,6 @@ describe("Transaction Repository - TypeORM", () => {
   //     expect(sut.findByEmail("user@email.com")).resolves.toEqual(
   //       makeFakeUser()
   //     );
-  //   });
-  // });
-
-  // describe("findById()", () => {
-  //   it("should call findOneBy() method from typeORM repository with correct values", async () => {
-  //     await sut.findById("valid_id");
-  //     expect(repository.findOneBy).toHaveBeenCalledWith({
-  //       id: "valid_id",
-  //     });
-  //   });
-
-  //   it("should throw an error when typeORM repository throws", async () => {
-  //     repository.findOneBy = rejectValueOnce(new Error());
-  //     expect(sut.findById("valid_id")).rejects.toThrow(new Error());
-  //   });
-
-  //   it("should return an User instance when operation succeeds", async () => {
-  //     expect(sut.findById("valid_id")).resolves.toEqual(makeFakeUser());
   //   });
   // });
 
