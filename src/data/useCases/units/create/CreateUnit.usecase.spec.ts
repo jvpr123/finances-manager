@@ -74,18 +74,6 @@ describe("Create Unit UseCase", () => {
       });
     });
 
-    // it("should call findByEmail() method from users repository with correct values", async () => {
-    //   await sut.execute(makeFakeCreateUnitDto());
-    //   expect(repository.findByEmail).toHaveBeenCalledWith(
-    //     makeFakeCreateUnitDto().email
-    //   );
-    // });
-
-    // it("should throw a Validation Error when email already exists", async () => {
-    //   repository.findByEmail = resolveValueOnce(makeFakeUser());
-    //   expect(sut.execute(makeFakeCreateUnitDto())).rejects.toThrow();
-    // });
-
     it("should throw an error when repository throws", async () => {
       repository.create = rejectValueOnce(new Error());
       expect(sut.execute(makeFakeCreateUnitDto())).rejects.toThrow(new Error());
