@@ -7,7 +7,7 @@ import { TransactionTypeOrmRepository } from "src/infra/database/typeORM/transac
 
 import { FindTransactionByIdUseCase } from "src/data/useCases/transactions/read/FindTransactionById.usecase";
 
-export const makeFindTransactiionByIdController = (): IController => {
+export const makeFindTransactionByIdController = (): IController => {
   const repository = new TransactionTypeOrmRepository(
     TypeOrmDataSource.getRepository<Transaction>(Transaction)
   );
