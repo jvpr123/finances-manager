@@ -20,4 +20,8 @@ export class TransactionTypeOrmRepository
   async findById(id: string): Promise<ITransactionModel> {
     return await this.repository.findOneBy({ id });
   }
+
+  async findAll(): Promise<ITransactionModel[]> {
+    return await this.repository.find();
+  }
 }
