@@ -33,6 +33,7 @@ describe("Transaction Repository - TypeORM", () => {
     repository.save = resolveValue(makeFakeTransaction());
     repository.findOneBy = resolveValue(makeFakeTransaction());
     repository.find = resolveValue([makeFakeTransaction()]);
+    repository.delete = resolveValue({ affected: 1 });
   });
 
   afterAll(async () => await ds.destroy());
@@ -98,25 +99,21 @@ describe("Transaction Repository - TypeORM", () => {
     });
   });
 
-  // describe("findByEmail()", () => {
-  //   it("should call findOneBy() method from typeORM repository with correct values", async () => {
-  //     await sut.findByEmail("user@email.com");
-  //     expect(repository.findOneBy).toHaveBeenCalledWith({
-  //       email: "user@email.com",
-  //     });
-  //   });
+  describe("delete()", () => {
+    it("should call delete() method with correct values", async () => {
+      await sut.delete("valid_id");
+      expect(repository.delete).toHaveBeenCalledWith({ id: "valid_id" });
+    });
 
-  //   it("should throw an error when typeORM repository throws", async () => {
-  //     repository.findOneBy = rejectValueOnce(new Error());
-  //     expect(sut.findByEmail("user@email.com")).rejects.toThrow(new Error());
-  //   });
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.delete = rejectValueOnce(new Error());
+      expect(sut.delete("error")).rejects.toThrow(new Error());
+    });
 
-  //   it("should return an User instance when operation succeeds", async () => {
-  //     expect(sut.findByEmail("user@email.com")).resolves.toEqual(
-  //       makeFakeUser()
-  //     );
-  //   });
-  // });
+    it("should return true when operation succeeds", async () => {
+      expect(sut.delete("valid_id")).resolves.toEqual(true);
+    });
+  });
 
   // describe("update()", () => {
   //   const inputData = makeFakeUpdateUserInput();
@@ -145,22 +142,6 @@ describe("Transaction Repository - TypeORM", () => {
   //     expect(sut.update(makeFakeUpdateUserInput())).resolves.toEqual(
   //       makeFakeUser()
   //     );
-  //   });
-  // });
-
-  // describe("delete()", () => {
-  //   it("should call delete() method from typeORM repository with correct values", async () => {
-  //     await sut.delete("valid_id");
-  //     expect(repository.delete).toHaveBeenCalledWith({ id: "valid_id" });
-  //   });
-
-  //   it("should throw an error when typeORM repository throws", async () => {
-  //     repository.delete = rejectValueOnce(new Error());
-  //     expect(sut.delete("error")).rejects.toThrow(new Error());
-  //   });
-
-  //   it("should return true when operation succeeds", async () => {
-  //     expect(sut.delete("valid_id")).resolves.toEqual(true);
   //   });
   // });
 });
