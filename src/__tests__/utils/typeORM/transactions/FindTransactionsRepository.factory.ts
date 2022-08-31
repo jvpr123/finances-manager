@@ -6,4 +6,5 @@ import { IFindTransactionsRepository } from "src/data/protocols/database/transac
 export const makeFindTransactionsRepositoryStub =
   (): IFindTransactionsRepository => ({
     findById: resolveValue(makeFakeTransaction()),
+    findAll: resolveValue([makeFakeTransaction()]),
   });

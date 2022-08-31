@@ -5,6 +5,7 @@ import {
 import {
   rejectValueOnce,
   resolveValue,
+  resolveValueOnce,
 } from "src/__tests__/utils/jest/MockReturnValues.factory";
 import { makeDataSource } from "src/__tests__/utils/typeORM/DataSource.factory";
 
@@ -31,6 +32,7 @@ describe("Transaction Repository - TypeORM", () => {
     repository.create = jest.fn().mockReturnValue(makeFakeTransaction());
     repository.save = resolveValue(makeFakeTransaction());
     repository.findOneBy = resolveValue(makeFakeTransaction());
+    repository.find = resolveValue([makeFakeTransaction()]);
   });
 
   afterAll(async () => await ds.destroy());
@@ -74,6 +76,28 @@ describe("Transaction Repository - TypeORM", () => {
     });
   });
 
+  describe("findAll()", () => {
+    it("should call findAll() method with correct values", async () => {
+      await sut.findAll();
+      expect(repository.find).toHaveBeenCalledWith();
+      expect(repository.find).toHaveBeenCalledTimes(1);
+    });
+
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.find = rejectValueOnce(new Error());
+      expect(sut.findAll()).rejects.toThrow(new Error());
+    });
+
+    it("should return an array of Transaction instances when operation succeeds", async () => {
+      expect(sut.findAll()).resolves.toEqual([makeFakeTransaction()]);
+    });
+
+    it("should return an empty array when operation succeeds but no user is found", async () => {
+      repository.find = resolveValueOnce([]);
+      expect(sut.findAll()).resolves.toEqual([]);
+    });
+  });
+
   // describe("findByEmail()", () => {
   //   it("should call findOneBy() method from typeORM repository with correct values", async () => {
   //     await sut.findByEmail("user@email.com");
@@ -91,27 +115,6 @@ describe("Transaction Repository - TypeORM", () => {
   //     expect(sut.findByEmail("user@email.com")).resolves.toEqual(
   //       makeFakeUser()
   //     );
-  //   });
-  // });
-
-  // describe("findAll()", () => {
-  //   it("should call findAll() method from typeORM repository with correct values", async () => {
-  //     await sut.findAll();
-  //     expect(repository.find).toHaveBeenCalledTimes(1);
-  //   });
-
-  //   it("should throw an error when typeORM repository throws", async () => {
-  //     repository.find = rejectValueOnce(new Error());
-  //     expect(sut.findAll()).rejects.toThrow(new Error());
-  //   });
-
-  //   it("should return an array of User instances when operation succeeds", async () => {
-  //     expect(sut.findAll()).resolves.toEqual([makeFakeUser()]);
-  //   });
-
-  //   it("should return an empty array when operation succeeds but no user is found", async () => {
-  //     repository.find = resolveValueOnce([]);
-  //     expect(sut.findAll()).resolves.toEqual([]);
   //   });
   // });
 

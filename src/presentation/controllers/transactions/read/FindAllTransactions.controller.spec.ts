@@ -1,41 +1,40 @@
 import { makeFakeTransaction } from "src/__tests__/utils/TransactionMocks.factory";
 import { rejectValueOnce } from "src/__tests__/utils/jest/MockReturnValues.factory";
 
-import { IFindTransactionByIdUseCase } from "src/domain/useCases/transactions/read/FindTransactionById.interface";
+import { IFindAllTransactionsUseCase } from "src/domain/useCases/transactions/read/FindAllTransactions.interface";
 
 import {
   internalServerError,
-  notFound,
   ok,
 } from "src/presentation/utils/http/HttpResponse.factory";
 import { IController } from "src/presentation/protocols/Controller.interface";
-import { FindTransactionByIdController } from "./FindTransactionById.controller";
+import { FindAllTransactionsController } from "./FindAllTransactions.controller";
 
 import * as errorHandler from "src/errors/utils/Handler.error";
-import { NotFoundError } from "src/errors/NotFound.error";
 
-const makeUseCaseStub = (): IFindTransactionByIdUseCase => ({
-  execute: jest.fn().mockResolvedValue(makeFakeTransaction()),
+const makeUseCaseStub = (): IFindAllTransactionsUseCase => ({
+  execute: jest.fn().mockResolvedValue([makeFakeTransaction()]),
 });
 
-const makeSUT = (useCase: IFindTransactionByIdUseCase): IController =>
-  new FindTransactionByIdController(useCase);
+const makeSUT = (useCase: IFindAllTransactionsUseCase): IController =>
+  new FindAllTransactionsController(useCase);
 
-describe("Find Transaction By ID Controller", () => {
+describe("Find All Transactions Controller", () => {
   let sut: IController;
-  let useCase: IFindTransactionByIdUseCase;
+  let useCase: IFindAllTransactionsUseCase;
 
-  const httpRequest = { params: { id: "valid_id" } };
+  const httpRequest = {};
 
   beforeEach(() => {
     useCase = makeUseCaseStub();
     sut = makeSUT(useCase);
   });
 
-  describe("Dependency: FindTransactionByIdUseCase", () => {
+  describe("Dependency: FindAllTransactionsUseCase", () => {
     it("should call execute() method with correct values", async () => {
       await sut.handle(httpRequest);
-      expect(useCase.execute).toHaveBeenCalledWith(httpRequest.params.id);
+      expect(useCase.execute).toHaveBeenCalledWith();
+      expect(useCase.execute).toHaveBeenCalledTimes(1);
     });
 
     it("should call errorHandler() with correct values when use-case throws an error", async () => {
@@ -44,11 +43,6 @@ describe("Find Transaction By ID Controller", () => {
 
       await sut.handle(httpRequest);
       expect(errorHandlerSpy).toHaveBeenCalledWith(new Error("error"));
-    });
-
-    it("should return a 404 status-code response when use-case throws a Not Found Error", async () => {
-      useCase.execute = rejectValueOnce(new NotFoundError("Not found"));
-      expect(sut.handle(httpRequest)).resolves.toEqual(notFound("Not found"));
     });
 
     it("should return a 500 status-code response when use-case throws general errors", async () => {
@@ -61,7 +55,7 @@ describe("Find Transaction By ID Controller", () => {
 
     it("should return a 200 status-code response when useCase operation succeeds", async () => {
       expect(sut.handle(httpRequest)).resolves.toEqual(
-        ok({ transaction: makeFakeTransaction() })
+        ok({ transactions: [makeFakeTransaction()] })
       );
     });
   });
