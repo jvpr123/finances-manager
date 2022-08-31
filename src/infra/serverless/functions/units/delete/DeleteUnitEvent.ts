@@ -7,6 +7,13 @@ export default {
       http: {
         method: "delete",
         path: "units/{id}",
+        request: {
+          parameters: {
+            paths: {
+              id: true,
+            },
+          },
+        },
       },
     },
   ],

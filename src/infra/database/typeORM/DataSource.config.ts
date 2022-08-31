@@ -2,10 +2,11 @@ import { DataSource } from "typeorm";
 
 import { User } from "./users/User.entity";
 import { Unit } from "./units/Unit.entity";
+import { Transaction } from "./transactions/Transaction.entity";
 
 export const TypeOrmDataSource = new DataSource({
   type: "sqlite",
   database: "tmp/db.sqlite",
   synchronize: true,
-  entities: [User, Unit],
+  entities: [User, Unit, Transaction],
 });
