@@ -6,9 +6,13 @@ import { ICreateTransactionInput } from "src/domain/dto/transactions/CreateTrans
 
 import { ICreateTransactionRepository } from "src/data/protocols/database/transactions/CreateTransactionRepository.interface";
 import { IFindTransactionsRepository } from "src/data/protocols/database/transactions/FindTransactionsRepository.interface";
+import { IDeleteTransactionRepository } from "src/data/protocols/database/transactions/DeleteTransactionRepository.interface";
 
 export class TransactionTypeOrmRepository
-  implements ICreateTransactionRepository, IFindTransactionsRepository
+  implements
+    ICreateTransactionRepository,
+    IFindTransactionsRepository,
+    IDeleteTransactionRepository
 {
   constructor(private repository: Repository<Transaction>) {}
 
@@ -23,5 +27,10 @@ export class TransactionTypeOrmRepository
 
   async findAll(): Promise<ITransactionModel[]> {
     return await this.repository.find();
+  }
+
+  async delete(id: string): Promise<boolean> {
+    const result = await this.repository.delete({ id });
+    return result.affected ? true : false;
   }
 }
