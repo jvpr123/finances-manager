@@ -1,21 +1,28 @@
 import { ICreateTransactionInput } from "src/domain/dto/transactions/CreateTransaction.dto";
+import { IUpdateTransactionInput } from "src/domain/dto/transactions/UpdateTransaction.dto";
 import { ITransactionModel } from "src/domain/models/Transaction.model";
 
-export const makeFakeCreateTransactionDto = (): ICreateTransactionInput => ({
+export const makeFakeCreateTransactionDto = (
+  value?: number
+): ICreateTransactionInput => ({
   title: "transaction_title",
   description: "transaction_description",
-  value: 100,
+  value: value ? value : 100,
   transactionDate: new Date(2022),
 });
 
-// export const makeFakeUpdateTransactionInput = (): IUpdateTransactionInput => ({
-//   id: "unit_id",
-//   name: "unit_name_update",
-//   description: "unit_description_update",
-// });
+export const makeFakeUpdateTransactionInput = (
+  value?: number
+): IUpdateTransactionInput => ({
+  id: "unit_id",
+  title: "transaction_title",
+  description: "transaction_description",
+  value: value ? value : 100,
+  transactionDate: new Date(2022),
+});
 
-export const makeFakeTransaction = (): ITransactionModel => {
-  const data = makeFakeCreateTransactionDto();
+export const makeFakeTransaction = (value?: number): ITransactionModel => {
+  const data = makeFakeCreateTransactionDto(value && value);
 
   return {
     ...data,
