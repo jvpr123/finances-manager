@@ -2,7 +2,7 @@ import request from "supertest";
 import { DataSource } from "typeorm";
 import { randomUUID } from "crypto";
 
-import { User } from "src/infra/database/typeORM/users/User.entity";
+import { Unit } from "src/infra/database/typeORM/units/Unit.entity";
 
 import { makeDataSource } from "src/__tests__/utils/typeORM/DataSource.factory";
 import {
@@ -25,7 +25,7 @@ describe("Update Unit (PATCH /units)", () => {
     updateUnitInput.id = body.unit.id;
   });
 
-  afterAll(async () => ds.getRepository<User>(User).clear());
+  afterAll(async () => ds.getRepository<Unit>(Unit).clear());
 
   it("should return 200 with updated unit data when valid data is provided", async () => {
     const response = await req.patch("/").send(updateUnitInput);
