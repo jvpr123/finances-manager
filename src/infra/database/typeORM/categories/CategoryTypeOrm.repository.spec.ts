@@ -33,6 +33,7 @@ describe("Category Repository - TypeORM", () => {
 
     repository.create = jest.fn().mockReturnValue(makeFakeCategory());
     repository.save = resolveValue(makeFakeCategory());
+    repository.findOneBy = resolveValue(makeFakeCategory());
   });
 
   afterAll(async () => await ds.destroy());
@@ -58,23 +59,25 @@ describe("Category Repository - TypeORM", () => {
     });
   });
 
-  // describe("findById()", () => {
-  //   it("should call findOneBy() methodwith correct values", async () => {
-  //     await sut.findById("valid_id");
-  //     expect(repository.findOneBy).toHaveBeenCalledWith({
-  //       id: "valid_id",
-  //     });
-  //   });
+  describe("findByTitle()", () => {
+    it("should call findOneBy() method with correct values", async () => {
+      await sut.findByTitle("category_title");
+      expect(repository.findOneBy).toHaveBeenCalledWith({
+        title: "category_title",
+      });
+    });
 
-  //   it("should throw an error when typeORM repository throws", async () => {
-  //     repository.findOneBy = rejectValueOnce(new Error());
-  //     expect(sut.findById("valid_id")).rejects.toThrow(new Error());
-  //   });
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.findOneBy = rejectValueOnce(new Error());
+      expect(sut.findByTitle("category_title")).rejects.toThrow(new Error());
+    });
 
-  //   it("should return an Transaction instance when operation succeeds", async () => {
-  //     expect(sut.findById("valid_id")).resolves.toEqual(makeFakeCategory());
-  //   });
-  // });
+    it("should return an Category instance when operation succeeds", async () => {
+      expect(sut.findByTitle("category_title")).resolves.toEqual(
+        makeFakeCategory()
+      );
+    });
+  });
 
   // describe("findAll()", () => {
   //   it("should call findAll() method with correct values", async () => {
