@@ -22,7 +22,7 @@ describe("Update Unit (PATCH /units)", () => {
     ds = await makeDataSource();
 
     const { body } = await req.post("/").send(createUnitInput);
-    updateUnitInput.id = body.unit.id;
+    updateUnitInput.id = body?.unit?.id;
   });
 
   afterAll(async () => ds.getRepository<Unit>(Unit).clear());
