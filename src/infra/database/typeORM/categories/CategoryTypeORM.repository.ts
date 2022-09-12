@@ -5,8 +5,11 @@ import { ICategoryModel } from "src/domain/models/Category.model";
 import { ICreateCategoryInput } from "src/domain/dto/categories/CreateCategory.dto";
 
 import { ICreateCategoryRepository } from "src/data/protocols/database/categories/CreateCategoryRepository.interface";
+import { IFindCategoryRepository } from "src/data/protocols/database/categories/FindCategoryRepository.interface";
 
-export class CategoryTypeOrmRepository implements ICreateCategoryRepository {
+export class CategoryTypeOrmRepository
+  implements ICreateCategoryRepository, IFindCategoryRepository
+{
   constructor(private repository: Repository<Category>) {}
 
   async create(data: ICreateCategoryInput): Promise<ICategoryModel> {
@@ -14,9 +17,9 @@ export class CategoryTypeOrmRepository implements ICreateCategoryRepository {
     return await this.repository.save(categoryToCreate);
   }
 
-  // async findById(id: string): Promise<ITransactionModel> {
-  //   return await this.repository.findOneBy({ id });
-  // }
+  async findByTitle(title: string): Promise<ICategoryModel> {
+    return await this.repository.findOneBy({ title });
+  }
 
   // async findAll(): Promise<ITransactionModel[]> {
   //   return await this.repository.find();
