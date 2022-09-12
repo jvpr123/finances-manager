@@ -39,7 +39,7 @@ const serverlessConfiguration: AWS = {
       concurrency: 10,
     },
     "serverless-offline": {
-      httpPort: 3030,
+      httpPort: 4000,
     },
   },
 };
