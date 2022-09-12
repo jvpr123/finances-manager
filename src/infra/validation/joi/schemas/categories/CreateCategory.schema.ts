@@ -5,5 +5,5 @@ import { ICreateCategoryInput } from "src/domain/dto/categories/CreateCategory.d
 export const CreateCategoryJoiSchema = Joi.object<ICreateCategoryInput, true>({
   title: Joi.string().min(3).max(100).required(),
   description: Joi.string().min(5).max(255).required(),
-  color: Joi.string().hex({ byteAligned: true }).required(),
+  color: Joi.string().min(7).max(7).required(),
 });

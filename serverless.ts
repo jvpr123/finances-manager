@@ -3,6 +3,7 @@ import type { AWS } from "@serverless/typescript";
 import usersFunctions from "@functions/users";
 import unitsFunctions from "@functions/units";
 import transactionsFunctions from "@functions/transactions";
+import categoriesFunctions from "@functions/categories";
 
 const serverlessConfiguration: AWS = {
   service: "service--serverless",
@@ -25,6 +26,7 @@ const serverlessConfiguration: AWS = {
     ...usersFunctions,
     ...unitsFunctions,
     ...transactionsFunctions,
+    ...categoriesFunctions,
   },
   package: { individually: true },
   custom: {
@@ -39,7 +41,7 @@ const serverlessConfiguration: AWS = {
       concurrency: 10,
     },
     "serverless-offline": {
-      httpPort: 4000,
+      httpPort: 3030,
     },
   },
 };

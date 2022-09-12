@@ -10,7 +10,7 @@ import { CategoryTypeOrmRepository } from "src/infra/database/typeORM/categories
 import { TypeOrmDataSource } from "src/infra/database/typeORM/DataSource.config";
 import { Category } from "src/infra/database/typeORM/categories/Category.entity";
 
-export const makeCreatecategoryController = (): IController => {
+export const makeCreateCategoryController = (): IController => {
   const validator = new JoiValidatorAdapter(CreateCategoryJoiSchema);
   const repository = new CategoryTypeOrmRepository(
     TypeOrmDataSource.getRepository<Category>(Category)
