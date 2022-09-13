@@ -5,8 +5,8 @@ import { Category } from "src/infra/database/typeORM/categories/Category.entity"
 import { makeDataSource } from "src/__tests__/utils/typeORM/DataSource.factory";
 import { makeFakeCreateCategoryInput } from "src/__tests__/utils/CategoryMocks.factory";
 
-describe("Find Category by Title (GET /categories/:name)", () => {
-  const req = request("http://localhost:3030/dev/categories");
+describe("Find Category by ID (GET /categories/id/:id)", () => {
+  const req = request("http://localhost:3030/dev/categories/id");
   const categoryInput = makeFakeCreateCategoryInput();
   let ds: DataSource;
 
@@ -29,7 +29,7 @@ describe("Find Category by Title (GET /categories/:name)", () => {
 
     expect(response.statusCode).toBe(404);
     expect(response.body).toStrictEqual({
-      message: "Could not find data related to unregistered_category category",
+      message: "Could not find data related to category ID provided",
     });
   });
 });
