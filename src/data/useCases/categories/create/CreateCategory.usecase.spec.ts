@@ -1,3 +1,4 @@
+import { makeFindCategoryRepositoryStub } from "src/__tests__/utils/typeORM/categories/FindCategoryRepository.factory";
 import {
   rejectValueOnce,
   resolveValue,
@@ -26,7 +27,7 @@ const makeValidatorStub = (): IValidator => ({
 
 const makeRepositoryStub = (): IRepository => ({
   create: resolveValue(makeFakeCategory()),
-  findByTitle: resolveValue(undefined),
+  ...makeFindCategoryRepositoryStub(),
 });
 
 const makeSUT = (

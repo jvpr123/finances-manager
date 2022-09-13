@@ -79,6 +79,24 @@ describe("Category Repository - TypeORM", () => {
     });
   });
 
+  describe("findById()", () => {
+    it("should call findOneBy() method with correct values", async () => {
+      await sut.findById("category_id");
+      expect(repository.findOneBy).toHaveBeenCalledWith({
+        id: "category_id",
+      });
+    });
+
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.findOneBy = rejectValueOnce(new Error());
+      expect(sut.findById("category_id")).rejects.toThrow(new Error());
+    });
+
+    it("should return an Category instance when operation succeeds", async () => {
+      expect(sut.findById("category_id")).resolves.toEqual(makeFakeCategory());
+    });
+  });
+
   // describe("findAll()", () => {
   //   it("should call findAll() method with correct values", async () => {
   //     await sut.findAll();
