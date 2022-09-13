@@ -26,7 +26,7 @@ describe("Find Category By Name UseCase", () => {
   });
 
   describe("Dependency: Category Repository", () => {
-    it("should call findByTitle() method from units repository with correct values", async () => {
+    it("should call findByTitle() method from categories repository with correct values", async () => {
       repository.findByTitle = resolveValueOnce(makeFakeCategory());
       await sut.execute("category_name");
       expect(repository.findByTitle).toHaveBeenCalledWith("category_name");

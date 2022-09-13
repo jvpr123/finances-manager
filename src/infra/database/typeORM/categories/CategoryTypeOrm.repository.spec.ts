@@ -6,7 +6,7 @@ import {
 import {
   rejectValueOnce,
   resolveValue,
-  // resolveValueOnce,
+  resolveValueOnce,
 } from "src/__tests__/utils/jest/MockReturnValues.factory";
 import { makeDataSource } from "src/__tests__/utils/typeORM/DataSource.factory";
 
@@ -34,6 +34,7 @@ describe("Category Repository - TypeORM", () => {
     repository.create = jest.fn().mockReturnValue(makeFakeCategory());
     repository.save = resolveValue(makeFakeCategory());
     repository.findOneBy = resolveValue(makeFakeCategory());
+    repository.find = resolveValue([makeFakeCategory()]);
   });
 
   afterAll(async () => await ds.destroy());
@@ -97,27 +98,27 @@ describe("Category Repository - TypeORM", () => {
     });
   });
 
-  // describe("findAll()", () => {
-  //   it("should call findAll() method with correct values", async () => {
-  //     await sut.findAll();
-  //     expect(repository.find).toHaveBeenCalledWith();
-  //     expect(repository.find).toHaveBeenCalledTimes(1);
-  //   });
+  describe("findAll()", () => {
+    it("should call findAll() method with correct values", async () => {
+      await sut.findAll();
+      expect(repository.find).toHaveBeenCalledWith();
+      expect(repository.find).toHaveBeenCalledTimes(1);
+    });
 
-  //   it("should throw an error when typeORM repository throws", async () => {
-  //     repository.find = rejectValueOnce(new Error());
-  //     expect(sut.findAll()).rejects.toThrow(new Error());
-  //   });
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.find = rejectValueOnce(new Error());
+      expect(sut.findAll()).rejects.toThrow(new Error());
+    });
 
-  //   it("should return an array of Transaction instances when operation succeeds", async () => {
-  //     expect(sut.findAll()).resolves.toEqual([makeFakeCategory()]);
-  //   });
+    it("should return an array of Category instances when operation succeeds", async () => {
+      expect(sut.findAll()).resolves.toEqual([makeFakeCategory()]);
+    });
 
-  //   it("should return an empty array when operation succeeds but no user is found", async () => {
-  //     repository.find = resolveValueOnce([]);
-  //     expect(sut.findAll()).resolves.toEqual([]);
-  //   });
-  // });
+    it("should return an empty array when operation succeeds but no user is found", async () => {
+      repository.find = resolveValueOnce([]);
+      expect(sut.findAll()).resolves.toEqual([]);
+    });
+  });
 
   // describe("update()", () => {
   //   const inputData = makeFakeUpdateTransactionInput(150);

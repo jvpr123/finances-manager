@@ -26,7 +26,7 @@ describe("FindCategoryById UseCase", () => {
   });
 
   describe("Dependency: Category Repository", () => {
-    it("should call findById() method from units repository with correct values", async () => {
+    it("should call findById() method from categories repository with correct values", async () => {
       await sut.execute("category_id");
       expect(repository.findById).toHaveBeenCalledWith("category_id");
     });
