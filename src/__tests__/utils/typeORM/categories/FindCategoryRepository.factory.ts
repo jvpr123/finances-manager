@@ -6,4 +6,5 @@ import { makeFakeCategory } from "src/__tests__/utils/CategoryMocks.factory";
 export const makeFindCategoryRepositoryStub = (): IFindCategoryRepository => ({
   findByTitle: resolveValue(undefined),
   findById: resolveValue(makeFakeCategory()),
+  findAll: resolveValue([makeFakeCategory()]),
 });

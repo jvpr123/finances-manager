@@ -25,9 +25,9 @@ export class CategoryTypeOrmRepository
     return await this.repository.findOneBy({ id });
   }
 
-  // async findAll(): Promise<ITransactionModel[]> {
-  //   return await this.repository.find();
-  // }
+  async findAll(): Promise<ICategoryModel[]> {
+    return await this.repository.find();
+  }
 
   // async update({
   //   id,
