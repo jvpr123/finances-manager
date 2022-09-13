@@ -153,7 +153,7 @@ export default {
   // ],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
-  testMatch: [".*\\.spec\\.ts$", ".*\\.test\\.ts$"],
+  // testMatch: [".*\\.spec\\.ts$", ".*\\.test\\.ts$"],
 
   // This option allows the use of a custom results processor
   // testResultsProcessor: undefined,
@@ -163,7 +163,7 @@ export default {
 
   // A map from regular expressions to paths to transformers
   transform: {
-    "^.+\\.(t|j)s$": "ts-jest",
+    ".+\\.ts$": "ts-jest",
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation

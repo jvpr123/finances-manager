@@ -37,9 +37,9 @@
   },
   "scripts": {
     "start:dev": "sls offline",
-    "test": "jest --runInBand",
-    "t:unit": "jest --testMatch='**/*.spec.ts' --runInBand --verbose",
-    "t:e2e": "jest --testMatch='**/*.test.ts' --runInBand --verbose",
+    "test": "jest --silent --passWithNoTests --noStackTrace --runInBand",
+    "t:unit": "yarn test -c jest-unit-config.ts --verbose",
+    "t:e2e": "yarn test -c jest-e2e-config.ts --verbose",
     "tw:unit": "yarn t:unit --watch",
     "tw:e2e": "yarn t:e2e --watch"
   }
