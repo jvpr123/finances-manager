@@ -10,10 +10,13 @@ import {
 
 import { IValidator } from "src/data/protocols/validation/Validator.interface";
 import { ICreateCategoryRepository } from "src/data/protocols/database/categories/CreateCategoryRepository.interface";
+import { IFindCategoryRepository } from "src/data/protocols/database/categories/FindCategoryRepository.interface";
 
 import { CreateCategoryUseCase } from "./CreateCategory.usecase";
 
 import { ValidationError } from "src/errors/Validation.error";
+
+type IRepository = ICreateCategoryRepository & IFindCategoryRepository;
 
 const makeValidatorStub = (): IValidator => ({
   validate: jest
@@ -21,19 +24,20 @@ const makeValidatorStub = (): IValidator => ({
     .mockReturnValue({ isValid: true, data: makeFakeCreateCategoryInput() }),
 });
 
-const makeRepositoryStub = (): ICreateCategoryRepository => ({
+const makeRepositoryStub = (): IRepository => ({
   create: resolveValue(makeFakeCategory()),
+  findByTitle: resolveValue(undefined),
 });
 
 const makeSUT = (
   validator: IValidator,
-  repository: ICreateCategoryRepository
+  repository: IRepository
 ): CreateCategoryUseCase => new CreateCategoryUseCase(validator, repository);
 
 describe("Create Category UseCase", () => {
   let sut: CreateCategoryUseCase;
   let validator: IValidator;
-  let repository: ICreateCategoryRepository;
+  let repository: IRepository;
 
   const inputData = makeFakeCreateCategoryInput();
 
@@ -47,11 +51,6 @@ describe("Create Category UseCase", () => {
     it("should call validator with correct values", async () => {
       sut.execute(inputData);
       expect(validator.validate).toBeCalledWith(inputData);
-    });
-
-    it("should continue execution when validation succeeds", async () => {
-      sut.execute(inputData);
-      expect(repository.create).toHaveBeenCalledTimes(1);
     });
 
     it("should throw an error when validation fails", async () => {
@@ -72,12 +71,24 @@ describe("Create Category UseCase", () => {
       expect(repository.create).toHaveBeenCalledWith(inputData);
     });
 
+    it("should call findByTitle() method with correct values", async () => {
+      await sut.execute(inputData);
+      expect(repository.findByTitle).toHaveBeenCalledWith(inputData.title);
+    });
+
+    it("should throw a Validation Error when title provided already exists", async () => {
+      repository.findByTitle = resolveValueOnce(makeFakeCategory());
+      expect(sut.execute(inputData)).rejects.toThrow(
+        new ValidationError(["Category title already in use"])
+      );
+    });
+
     it("should throw an error when repository throws", async () => {
       repository.create = rejectValueOnce(new Error());
       expect(sut.execute(inputData)).rejects.toThrow(new Error());
     });
 
-    it("should return an TransactionModel instance when operations succeed", async () => {
+    it("should return an CategoryModel instance when operations succeed", async () => {
       expect(sut.execute(inputData)).resolves.toEqual(makeFakeCategory());
     });
   });
