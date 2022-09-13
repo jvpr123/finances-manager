@@ -1,12 +1,12 @@
 import request from "supertest";
 import { DataSource } from "typeorm";
+import { Category } from "src/infra/database/typeORM/categories/Category.entity";
 
 import { makeDataSource } from "src/__tests__/utils/typeORM/DataSource.factory";
-import { Unit } from "src/infra/database/typeORM/units/Unit.entity";
 import { makeFakeCreateUnitDto } from "src/__tests__/utils/UnitMocks.factory";
 
-describe("Find All Units (GET /units)", () => {
-  const req = request("http://localhost:3030/dev/units");
+describe("Find All Categories (GET /categories)", () => {
+  const req = request("http://localhost:3030/dev/categories");
   const userInput = makeFakeCreateUnitDto();
   let ds: DataSource;
 
@@ -15,21 +15,21 @@ describe("Find All Units (GET /units)", () => {
     await req.post("/").send(userInput);
   });
 
-  afterEach(async () => ds.getRepository<Unit>(Unit).clear());
+  afterEach(async () => ds.getRepository<Category>(Category).clear());
 
-  it("should return 200 with units data when request succeeds", async () => {
+  it("should return 200 with categories data when request succeeds", async () => {
     const response = await req.get("/");
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toHaveProperty("units");
+    expect(response.body).toHaveProperty("categories");
   });
 
-  it("should return 200 with empty array when no unit is registered", async () => {
+  it("should return 200 with empty array when no category is registered", async () => {
     const response = await req.get("/");
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toStrictEqual({
-      units: [],
+      categories: [],
     });
   });
 });
