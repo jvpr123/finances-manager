@@ -3,12 +3,17 @@ import { Category } from "./Category.entity";
 
 import { ICategoryModel } from "src/domain/models/Category.model";
 import { ICreateCategoryInput } from "src/domain/dto/categories/CreateCategory.dto";
+import { IUpdateCategoryInput } from "src/domain/dto/categories/UpdateCategory.dto";
 
 import { ICreateCategoryRepository } from "src/data/protocols/database/categories/CreateCategoryRepository.interface";
 import { IFindCategoryRepository } from "src/data/protocols/database/categories/FindCategoryRepository.interface";
+import { IUpdateCategoryRepository } from "src/data/protocols/database/categories/UpdateCategoryRepository.interface";
 
 export class CategoryTypeOrmRepository
-  implements ICreateCategoryRepository, IFindCategoryRepository
+  implements
+    ICreateCategoryRepository,
+    IFindCategoryRepository,
+    IUpdateCategoryRepository
 {
   constructor(private repository: Repository<Category>) {}
 
@@ -29,13 +34,10 @@ export class CategoryTypeOrmRepository
     return await this.repository.find();
   }
 
-  // async update({
-  //   id,
-  //   ...data
-  // }: IUpdateTransactionInput): Promise<ITransactionModel> {
-  //   await this.repository.update({ id }, data);
-  //   return await this.repository.findOneBy({ id });
-  // }
+  async update({ id, ...data }: IUpdateCategoryInput): Promise<ICategoryModel> {
+    await this.repository.update({ id }, data);
+    return await this.repository.findOneBy({ id });
+  }
 
   // async delete(id: string): Promise<boolean> {
   //   const result = await this.repository.delete({ id });

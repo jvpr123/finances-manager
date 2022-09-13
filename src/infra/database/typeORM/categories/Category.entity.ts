@@ -12,7 +12,7 @@ export class Category implements ICategoryModel {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column({ type: "varchar", width: 100 })
+  @Column({ type: "varchar", width: 100, unique: true })
   title: string;
 
   @Column({ type: "varchar", width: 255 })
