@@ -1,6 +1,7 @@
 import {
   makeFakeCategory,
   makeFakeCreateCategoryInput,
+  makeFakeUpdateCategoryInput,
 } from "src/__tests__/utils/CategoryMocks.factory";
 
 import {
@@ -35,6 +36,7 @@ describe("Category Repository - TypeORM", () => {
     repository.save = resolveValue(makeFakeCategory());
     repository.findOneBy = resolveValue(makeFakeCategory());
     repository.find = resolveValue([makeFakeCategory()]);
+    repository.update = resolveValue(makeFakeCategory());
   });
 
   afterAll(async () => await ds.destroy());
@@ -120,31 +122,31 @@ describe("Category Repository - TypeORM", () => {
     });
   });
 
-  // describe("update()", () => {
-  //   const inputData = makeFakeUpdateTransactionInput(150);
+  describe("update()", () => {
+    const inputData = makeFakeUpdateCategoryInput();
 
-  //   it("should call update() method from typeORM repository with correct values", async () => {
-  //     const { id, ...data } = inputData;
+    it("should call update() method from typeORM repository with correct values", async () => {
+      const { id, ...data } = inputData;
 
-  //     await sut.update(inputData);
-  //     expect(repository.update).toHaveBeenCalledWith({ id }, data);
-  //   });
+      await sut.update(inputData);
+      expect(repository.update).toHaveBeenCalledWith({ id }, data);
+    });
 
-  //   it("should call findOneBy() method from typeORM repository with correct values", async () => {
-  //     await sut.update(inputData);
-  //     expect(repository.findOneBy).toHaveBeenCalledWith({ id: inputData.id });
-  //   });
+    it("should call findOneBy() method from typeORM repository with correct values", async () => {
+      await sut.update(inputData);
+      expect(repository.findOneBy).toHaveBeenCalledWith({ id: inputData.id });
+    });
 
-  //   it("should throw an error when typeORM repository throws", async () => {
-  //     repository.update = rejectValueOnce(new Error());
-  //     expect(sut.update(inputData)).rejects.toThrow(new Error());
-  //   });
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.update = rejectValueOnce(new Error());
+      expect(sut.update(inputData)).rejects.toThrow(new Error());
+    });
 
-  //   it("should return a Transaction instance when operation succeeds", async () => {
-  //     repository.findOneBy = resolveValueOnce(makeFakeCategory(150));
-  //     expect(sut.update(inputData)).resolves.toEqual(makeFakeCategory(150));
-  //   });
-  // });
+    it("should return a CategoryModel instance when operation succeeds", async () => {
+      repository.findOneBy = resolveValueOnce(makeFakeCategory());
+      expect(sut.update(inputData)).resolves.toEqual(makeFakeCategory());
+    });
+  });
 
   // describe("delete()", () => {
   //   it("should call delete() method with correct values", async () => {
