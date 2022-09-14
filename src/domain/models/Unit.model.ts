@@ -1,3 +1,5 @@
+import { IUserModel } from "./User.model";
+
 export interface IUnitModel {
   id: string;
   name: string;
@@ -6,4 +8,5 @@ export interface IUnitModel {
   currentBalance: number;
   createdAt: Date;
   updatedAt: Date;
+  owner: IUserModel;
 }

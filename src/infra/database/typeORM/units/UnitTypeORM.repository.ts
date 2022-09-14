@@ -5,7 +5,7 @@ import { IFindUnitsRepository } from "src/data/protocols/database/units/FindUnit
 import { IUpdateUnitRepository } from "src/data/protocols/database/units/UpdateUnitRepository.interface";
 import { IDeleteUnitRepository } from "src/data/protocols/database/units/DeleteUnitRepository.interface";
 
-import { ICreateUnitInput } from "src/domain/dto/units/ICreateUnit.dto";
+import { ICreateUnitDto } from "src/domain/dto/units/ICreateUnit.dto";
 import { IUpdateUnitInput } from "src/domain/dto/units/IUpdateUnit.dto";
 import { IUnitModel } from "src/domain/models/Unit.model";
 
@@ -20,8 +20,10 @@ export class UnitTypeOrmRepository
 {
   constructor(private repository: Repository<Unit>) {}
 
-  async create(data: ICreateUnitInput): Promise<IUnitModel> {
+  async create({ owner, ...data }: ICreateUnitDto): Promise<IUnitModel> {
     const unitToCreate = this.repository.create(data);
+    unitToCreate.owner = owner;
+
     return await this.repository.save(unitToCreate);
   }
 

@@ -1,11 +1,14 @@
-import { IUserModel } from "src/domain/models/User.model";
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+
+import { IUserModel } from "src/domain/models/User.model";
+import { Unit } from "src/infra/database/typeORM/units/Unit.entity";
 
 @Entity()
 export class User implements IUserModel {
@@ -29,4 +32,7 @@ export class User implements IUserModel {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Unit, (unit) => unit.owner, { eager: true, cascade: true })
+  units?: Unit[];
 }

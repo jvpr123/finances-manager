@@ -1,3 +1,5 @@
+import { IUnitModel } from "src/domain/models/Unit.model";
+
 export interface IUserModel {
   id: string;
   name: string;
@@ -6,4 +8,5 @@ export interface IUserModel {
   phone: string;
   createdAt: Date;
   updatedAt: Date;
+  units?: IUnitModel[];
 }

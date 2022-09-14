@@ -1,11 +1,14 @@
-import { IUnitModel } from "src/domain/models/Unit.model";
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+
+import { IUnitModel } from "src/domain/models/Unit.model";
+import { User } from "src/infra/database/typeORM/users/User.entity";
 
 @Entity()
 export class Unit implements IUnitModel {
@@ -29,4 +32,7 @@ export class Unit implements IUnitModel {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @ManyToOne(() => User, (user) => user.units)
+  owner: User;
 }
