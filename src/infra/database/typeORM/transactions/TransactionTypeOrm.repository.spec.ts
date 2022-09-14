@@ -42,8 +42,10 @@ describe("Transaction Repository - TypeORM", () => {
 
   describe("create()", () => {
     it("should call create() method from typeORM repository with correct values", async () => {
+      const { unit, ...data } = inputData;
+
       await sut.create(inputData);
-      expect(repository.create).toHaveBeenCalledWith(inputData);
+      expect(repository.create).toHaveBeenCalledWith(data);
     });
 
     it("should call save() method from typeORM repository with correct values", async () => {

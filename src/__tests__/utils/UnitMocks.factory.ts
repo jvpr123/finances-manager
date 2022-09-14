@@ -45,5 +45,6 @@ export const makeFakeUnit = (): IUnitModel => {
     createdAt: new Date(2022),
     updatedAt: new Date(2022),
     owner: makeFakeUser(),
+    transactions: [],
   };
 };

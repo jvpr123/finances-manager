@@ -1,10 +1,26 @@
-import { ICreateTransactionInput } from "src/domain/dto/transactions/CreateTransaction.dto";
 import { IUpdateTransactionInput } from "src/domain/dto/transactions/UpdateTransaction.dto";
 import { ITransactionModel } from "src/domain/models/Transaction.model";
+import {
+  ICreateTransactionDto,
+  ICreateTransactionInput,
+} from "src/domain/dto/transactions/CreateTransaction.dto";
+
+import { makeFakeUnit } from "./UnitMocks.factory";
+
+export const makeFakeCreateTransactionInput = (
+  value?: number
+): ICreateTransactionInput => ({
+  unitId: "unit_id",
+  title: "transaction_title",
+  description: "transaction_description",
+  value: value ? value : 100,
+  transactionDate: new Date(2022),
+});
 
 export const makeFakeCreateTransactionDto = (
   value?: number
-): ICreateTransactionInput => ({
+): ICreateTransactionDto => ({
+  unit: makeFakeUnit(),
   title: "transaction_title",
   description: "transaction_description",
   value: value ? value : 100,
@@ -29,5 +45,6 @@ export const makeFakeTransaction = (value?: number): ITransactionModel => {
     id: "valid_id",
     createdAt: new Date(2022),
     updatedAt: new Date(2022),
+    unit: makeFakeUnit(),
   };
 };

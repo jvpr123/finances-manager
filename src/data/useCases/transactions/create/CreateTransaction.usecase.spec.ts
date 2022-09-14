@@ -1,3 +1,4 @@
+import { makeFindUnitsRepositoryStub } from "src/__tests__/utils/typeORM/units/FindUnitsRepository.factory";
 import {
   rejectValueOnce,
   resolveValue,
@@ -5,20 +6,23 @@ import {
 } from "src/__tests__/utils/jest/MockReturnValues.factory";
 import {
   makeFakeCreateTransactionDto,
+  makeFakeCreateTransactionInput,
   makeFakeTransaction,
 } from "src/__tests__/utils/TransactionMocks.factory";
 
 import { IValidator } from "src/data/protocols/validation/Validator.interface";
+import { IFindUnitsRepository } from "src/data/protocols/database/units/FindUnitsRepository.interface";
 import { ICreateTransactionRepository } from "src/data/protocols/database/transactions/CreateTransactionRepository.interface";
 
 import { CreateTransactionUseCase } from "./CreateTransaction.usecase";
 
 import { ValidationError } from "src/errors/Validation.error";
+import { NotFoundError } from "src/errors/NotFound.error";
 
 const makeValidatorStub = (): IValidator => ({
   validate: jest
     .fn()
-    .mockReturnValue({ isValid: true, data: makeFakeCreateTransactionDto() }),
+    .mockReturnValue({ isValid: true, data: makeFakeCreateTransactionInput() }),
 });
 
 const makeRepositoryStub = (): ICreateTransactionRepository => ({
@@ -27,32 +31,35 @@ const makeRepositoryStub = (): ICreateTransactionRepository => ({
 
 const makeSUT = (
   validator: IValidator,
-  repository: ICreateTransactionRepository
+  unitsRepository: IFindUnitsRepository,
+  transactionsRepository: ICreateTransactionRepository
 ): CreateTransactionUseCase =>
-  new CreateTransactionUseCase(validator, repository);
+  new CreateTransactionUseCase(
+    validator,
+    unitsRepository,
+    transactionsRepository
+  );
 
 describe("Create Transaction UseCase", () => {
   let sut: CreateTransactionUseCase;
   let validator: IValidator;
-  let repository: ICreateTransactionRepository;
+  let unitsRepository: IFindUnitsRepository;
+  let transactionsRepository: ICreateTransactionRepository;
 
-  const inputData = makeFakeCreateTransactionDto();
+  const inputData = makeFakeCreateTransactionInput();
 
   beforeEach(() => {
     validator = makeValidatorStub();
-    repository = makeRepositoryStub();
-    sut = makeSUT(validator, repository);
+    unitsRepository = makeFindUnitsRepositoryStub();
+    transactionsRepository = makeRepositoryStub();
+
+    sut = makeSUT(validator, unitsRepository, transactionsRepository);
   });
 
   describe("Dependency: Validator", () => {
     it("should call validator with correct values", async () => {
       sut.execute(inputData);
       expect(validator.validate).toBeCalledWith(inputData);
-    });
-
-    it("should continue execution when validation succeeds", async () => {
-      sut.execute(inputData);
-      expect(repository.create).toHaveBeenCalledTimes(1);
     });
 
     it("should throw an error when validation fails", async () => {
@@ -68,13 +75,30 @@ describe("Create Transaction UseCase", () => {
   });
 
   describe("Dependency: Transactions Repository", () => {
+    it("should call findById() method from units repository with correct values", async () => {
+      await sut.execute(inputData);
+      expect(unitsRepository.findById).toHaveBeenCalledWith(inputData.unitId);
+    });
+
+    it("should throw a NotFoundError if unit is not found", async () => {
+      unitsRepository.findById = resolveValueOnce(undefined);
+
+      expect(sut.execute(inputData)).rejects.toThrow(
+        new NotFoundError(
+          "Could not create: Unit data related to ID provided not found"
+        )
+      );
+    });
+
     it("should call create() method from transactions repository with correct values", async () => {
       await sut.execute(inputData);
-      expect(repository.create).toHaveBeenCalledWith(inputData);
+      expect(transactionsRepository.create).toHaveBeenCalledWith(
+        makeFakeCreateTransactionDto()
+      );
     });
 
     it("should throw an error when repository throws", async () => {
-      repository.create = rejectValueOnce(new Error());
+      transactionsRepository.create = rejectValueOnce(new Error());
       expect(sut.execute(inputData)).rejects.toThrow(new Error());
     });
 
