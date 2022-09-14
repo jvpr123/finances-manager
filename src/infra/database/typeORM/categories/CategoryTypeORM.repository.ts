@@ -8,12 +8,14 @@ import { IUpdateCategoryInput } from "src/domain/dto/categories/UpdateCategory.d
 import { ICreateCategoryRepository } from "src/data/protocols/database/categories/CreateCategoryRepository.interface";
 import { IFindCategoryRepository } from "src/data/protocols/database/categories/FindCategoryRepository.interface";
 import { IUpdateCategoryRepository } from "src/data/protocols/database/categories/UpdateCategoryRepository.interface";
+import { IDeleteCategoryRepository } from 'src/data/protocols/database/categories/DeleteCategoryRepository.interface';
 
 export class CategoryTypeOrmRepository
   implements
     ICreateCategoryRepository,
     IFindCategoryRepository,
-    IUpdateCategoryRepository
+    IUpdateCategoryRepository,
+    IDeleteCategoryRepository
 {
   constructor(private repository: Repository<Category>) {}
 
@@ -39,8 +41,8 @@ export class CategoryTypeOrmRepository
     return await this.repository.findOneBy({ id });
   }
 
-  // async delete(id: string): Promise<boolean> {
-  //   const result = await this.repository.delete({ id });
-  //   return result.affected ? true : false;
-  // }
+  async delete(id: string): Promise<boolean> {
+    const result = await this.repository.delete({ id });
+    return result.affected ? true : false;
+  }
 }
