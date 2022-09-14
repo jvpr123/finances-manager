@@ -43,8 +43,10 @@ describe("Unit Repository - TypeORM", () => {
 
   describe("create()", () => {
     it("should call create() method from typeORM repository with correct values", async () => {
+      const { owner, ...unitDto } = unitData;
+
       await sut.create(unitData);
-      expect(repository.create).toHaveBeenCalledWith(unitData);
+      expect(repository.create).toHaveBeenCalledWith(unitDto);
     });
 
     it("should call save() method from typeORM repository with correct values", async () => {
