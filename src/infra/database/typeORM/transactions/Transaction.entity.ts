@@ -1,8 +1,10 @@
 import { ITransactionModel } from "src/domain/models/Transaction.model";
+import { Unit } from "src/infra/database/typeORM/units/Unit.entity";
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -29,4 +31,7 @@ export class Transaction implements ITransactionModel {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @ManyToOne(() => Unit, (unit) => unit.transactions)
+  unit: Unit;
 }
