@@ -1,8 +1,8 @@
 import type { AWS } from "@serverless/typescript";
 
-import usersFunctions from "@functions/users";
-import unitsFunctions from "@functions/units";
-import transactionsFunctions from "@functions/transactions";
+// import usersFunctions from "@functions/users";
+// import unitsFunctions from "@functions/units";
+// import transactionsFunctions from "@functions/transactions";
 import categoriesFunctions from "@functions/categories";
 
 const serverlessConfiguration: AWS = {
@@ -23,9 +23,9 @@ const serverlessConfiguration: AWS = {
   },
   // import the function via paths
   functions: {
-    ...usersFunctions,
-    ...unitsFunctions,
-    ...transactionsFunctions,
+    // ...usersFunctions,
+    // ...unitsFunctions,
+    // ...transactionsFunctions,
     ...categoriesFunctions,
   },
   package: { individually: true },
