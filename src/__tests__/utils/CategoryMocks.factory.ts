@@ -23,5 +23,6 @@ export const makeFakeCategory = (): ICategoryModel => {
     ...data,
     createdAt: new Date(2022),
     updatedAt: new Date(2022),
+    transactions: [],
   };
 };

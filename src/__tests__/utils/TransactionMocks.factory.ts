@@ -6,11 +6,13 @@ import {
 } from "src/domain/dto/transactions/CreateTransaction.dto";
 
 import { makeFakeUnit } from "./UnitMocks.factory";
+import { makeFakeCategory } from "src/__tests__/utils/CategoryMocks.factory";
 
 export const makeFakeCreateTransactionInput = (
   value?: number
 ): ICreateTransactionInput => ({
   unitId: "unit_id",
+  categoryId: "category_id",
   title: "transaction_title",
   description: "transaction_description",
   value: value ? value : 100,
@@ -21,6 +23,7 @@ export const makeFakeCreateTransactionDto = (
   value?: number
 ): ICreateTransactionDto => ({
   unit: makeFakeUnit(),
+  category: makeFakeCategory(),
   title: "transaction_title",
   description: "transaction_description",
   value: value ? value : 100,
@@ -45,6 +48,5 @@ export const makeFakeTransaction = (value?: number): ITransactionModel => {
     id: "valid_id",
     createdAt: new Date(2022),
     updatedAt: new Date(2022),
-    unit: makeFakeUnit(),
   };
 };

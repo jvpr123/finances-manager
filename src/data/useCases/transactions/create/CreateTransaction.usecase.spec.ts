@@ -12,12 +12,14 @@ import {
 
 import { IValidator } from "src/data/protocols/validation/Validator.interface";
 import { IFindUnitsRepository } from "src/data/protocols/database/units/FindUnitsRepository.interface";
+import { IFindCategoryRepository } from "src/data/protocols/database/categories/FindCategoryRepository.interface";
 import { ICreateTransactionRepository } from "src/data/protocols/database/transactions/CreateTransactionRepository.interface";
 
 import { CreateTransactionUseCase } from "./CreateTransaction.usecase";
 
 import { ValidationError } from "src/errors/Validation.error";
 import { NotFoundError } from "src/errors/NotFound.error";
+import { makeFindCategoryRepositoryStub } from "src/__tests__/utils/typeORM/categories/FindCategoryRepository.factory";
 
 const makeValidatorStub = (): IValidator => ({
   validate: jest
@@ -32,11 +34,13 @@ const makeRepositoryStub = (): ICreateTransactionRepository => ({
 const makeSUT = (
   validator: IValidator,
   unitsRepository: IFindUnitsRepository,
+  categoriesRepository: IFindCategoryRepository,
   transactionsRepository: ICreateTransactionRepository
 ): CreateTransactionUseCase =>
   new CreateTransactionUseCase(
     validator,
     unitsRepository,
+    categoriesRepository,
     transactionsRepository
   );
 
@@ -44,6 +48,7 @@ describe("Create Transaction UseCase", () => {
   let sut: CreateTransactionUseCase;
   let validator: IValidator;
   let unitsRepository: IFindUnitsRepository;
+  let categoriesRepository: IFindCategoryRepository;
   let transactionsRepository: ICreateTransactionRepository;
 
   const inputData = makeFakeCreateTransactionInput();
@@ -51,9 +56,15 @@ describe("Create Transaction UseCase", () => {
   beforeEach(() => {
     validator = makeValidatorStub();
     unitsRepository = makeFindUnitsRepositoryStub();
+    categoriesRepository = makeFindCategoryRepositoryStub();
     transactionsRepository = makeRepositoryStub();
 
-    sut = makeSUT(validator, unitsRepository, transactionsRepository);
+    sut = makeSUT(
+      validator,
+      unitsRepository,
+      categoriesRepository,
+      transactionsRepository
+    );
   });
 
   describe("Dependency: Validator", () => {
@@ -74,7 +85,7 @@ describe("Create Transaction UseCase", () => {
     });
   });
 
-  describe("Dependency: Transactions Repository", () => {
+  describe("Dependency: Units Repository", () => {
     it("should call findById() method from units repository with correct values", async () => {
       await sut.execute(inputData);
       expect(unitsRepository.findById).toHaveBeenCalledWith(inputData.unitId);
@@ -89,7 +100,28 @@ describe("Create Transaction UseCase", () => {
         )
       );
     });
+  });
 
+  describe("Dependency: Categories Repository", () => {
+    it("should call findById() method from categories repository with correct values", async () => {
+      await sut.execute(inputData);
+      expect(categoriesRepository.findById).toHaveBeenCalledWith(
+        inputData.categoryId
+      );
+    });
+
+    it("should throw a NotFoundError if category is not found", async () => {
+      categoriesRepository.findById = resolveValueOnce(undefined);
+
+      expect(sut.execute(inputData)).rejects.toThrow(
+        new NotFoundError(
+          "Could not create: Category data related to ID provided not found"
+        )
+      );
+    });
+  });
+
+  describe("Dependency: Transactions Repository", () => {
     it("should call create() method from transactions repository with correct values", async () => {
       await sut.execute(inputData);
       expect(transactionsRepository.create).toHaveBeenCalledWith(
