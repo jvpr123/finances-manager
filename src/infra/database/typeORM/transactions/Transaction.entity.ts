@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Category } from "../categories/Category.entity";
 
 @Entity()
 export class Transaction implements ITransactionModel {
@@ -34,4 +35,7 @@ export class Transaction implements ITransactionModel {
 
   @ManyToOne(() => Unit, (unit) => unit.transactions)
   unit: Unit;
+
+  @ManyToOne(() => Category, (category) => category.transactions)
+  category: Category;
 }

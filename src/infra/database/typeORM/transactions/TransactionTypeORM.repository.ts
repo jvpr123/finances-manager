@@ -21,10 +21,13 @@ export class TransactionTypeOrmRepository
 
   async create({
     unit,
+    category,
     ...data
   }: ICreateTransactionDto): Promise<ITransactionModel> {
     const transactionToCreate = this.repository.create(data);
+
     transactionToCreate.unit = unit;
+    transactionToCreate.category = category;
 
     return await this.repository.save(transactionToCreate);
   }

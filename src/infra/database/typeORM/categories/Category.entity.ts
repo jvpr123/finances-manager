@@ -3,9 +3,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Transaction } from "../transactions/Transaction.entity";
 
 @Entity()
 export class Category implements ICategoryModel {
@@ -26,4 +28,7 @@ export class Category implements ICategoryModel {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Transaction, (transaction) => transaction.category)
+  transactions: Transaction[];
 }

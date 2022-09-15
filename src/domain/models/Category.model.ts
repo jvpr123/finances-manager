@@ -1,3 +1,5 @@
+import { ITransactionModel } from "./Transaction.model";
+
 export interface ICategoryModel {
   id: string;
   title: string;
@@ -5,4 +7,6 @@ export interface ICategoryModel {
   color: string;
   createdAt: Date;
   updatedAt: Date;
+
+  transactions: ITransactionModel[];
 }

@@ -1,4 +1,5 @@
 import { IUnitModel } from "src/domain/models/Unit.model";
+import { ICategoryModel } from "./Category.model";
 
 export interface ITransactionModel {
   id: string;
@@ -11,4 +12,5 @@ export interface ITransactionModel {
   updatedAt: Date;
 
   unit: IUnitModel;
+  category: ICategoryModel;
 }
