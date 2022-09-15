@@ -17,17 +17,28 @@ export class UpdateTransactionUseCase implements IUpdateTransactionUseCase {
   ) {}
 
   async execute(input: IUpdateTransactionInput): Promise<ITransactionModel> {
+    const dataToUpdate = this.validateData(input);
+    await this.getTransaction(dataToUpdate.id);
+
+    return await this.repository.update(dataToUpdate);
+  }
+
+  private validateData(
+    input: IUpdateTransactionInput
+  ): IUpdateTransactionInput {
     const { isValid, data } = this.validator.validate(input);
 
     if (!isValid) throw new ValidationError(data);
 
-    const transactionToUpdate = await this.repository.findById(data.id);
+    return data;
+  }
 
-    if (!transactionToUpdate)
+  private async getTransaction(transactionId: string): Promise<void> {
+    const transaction = await this.repository.findById(transactionId);
+
+    if (!transaction)
       throw new NotFoundError(
         `Could not update: data related to ID provided not found`
       );
-
-    return await this.repository.update(data);
   }
 }

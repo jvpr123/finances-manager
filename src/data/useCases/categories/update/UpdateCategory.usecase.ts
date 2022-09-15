@@ -18,23 +18,38 @@ export class UpdateCategoryUseCase implements IUpdateCategoryUseCase {
   ) {}
 
   async execute(input: IUpdateCategoryInput): Promise<ICategoryModel> {
+    const dataToUpdate = await this.validateData(input);
+    await this.getCategory(dataToUpdate.id);
+
+    return await this.repository.update(dataToUpdate);
+  }
+
+  private async validateData(
+    input: IUpdateCategoryInput
+  ): Promise<IUpdateCategoryInput> {
     const { isValid, data } = this.validator.validate(input);
-    const categoryTitleAlreadyExists = await this.repository.findByTitle(
-      data?.title
+    const categoryAlreadyExists = await this.repository.findByTitle(
+      input.title
     );
 
-    if (!isValid) throw new ValidationError(data);
+    if (!isValid) {
+      throw categoryAlreadyExists
+        ? new ValidationError([...data, '"title" provided already in use'])
+        : new ValidationError(data);
+    }
 
-    if (categoryTitleAlreadyExists)
-      throw new ValidationError([`'title' provided is already in use`]);
+    if (isValid && categoryAlreadyExists)
+      throw new ValidationError([`"category" provided already in use`]);
 
-    const categoryToUpdate = await this.repository.findById(data.id);
+    return data;
+  }
 
-    if (!categoryToUpdate)
+  private async getCategory(categoryId: string): Promise<void> {
+    const category = await this.repository.findById(categoryId);
+
+    if (!category)
       throw new NotFoundError(
         `Could not update: data related to ID provided not found`
       );
-
-    return await this.repository.update(data);
   }
 }

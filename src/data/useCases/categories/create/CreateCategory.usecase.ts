@@ -17,16 +17,28 @@ export class CreateCategoryUseCase implements ICreateCategoryUseCase {
   ) {}
 
   async execute(input: ICreateCategoryInput): Promise<ICategoryModel> {
+    const dataToCreate = await this.validateData(input);
+
+    return await this.repository.create(dataToCreate);
+  }
+
+  private async validateData(
+    input: ICreateCategoryInput
+  ): Promise<ICreateCategoryInput> {
     const { isValid, data } = this.validator.validate(input);
-    const categoryTitleAlreadyExists = await this.repository.findByTitle(
-      input?.title
+    const categoryAlreadyExists = await this.repository.findByTitle(
+      input.title
     );
 
-    if (!isValid) throw new ValidationError(data);
-    if (categoryTitleAlreadyExists) {
-      throw new ValidationError(["Category title already in use"]);
+    if (!isValid) {
+      throw categoryAlreadyExists
+        ? new ValidationError([...data, '"title" provided already in use'])
+        : new ValidationError(data);
     }
 
-    return await this.repository.create(data);
+    if (isValid && categoryAlreadyExists)
+      throw new ValidationError([`"category" provided already in use`]);
+
+    return data;
   }
 }

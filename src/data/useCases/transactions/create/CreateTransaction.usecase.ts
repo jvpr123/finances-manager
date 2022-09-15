@@ -26,9 +26,9 @@ export class CreateTransactionUseCase implements ICreateTransactionUseCase {
     const category = await this.getCategory(categoryId);
 
     return await this.transactionsRepository.create({
+      ...creationData,
       unit,
       category,
-      ...creationData,
     });
   }
 

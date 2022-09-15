@@ -16,21 +16,36 @@ export class UpdateUnitUseCase implements IUpdateUnitUseCase {
   ) {}
 
   async execute(input: IUpdateUnitInput): Promise<IUnitModel> {
+    const dataToUpdate = await this.validateData(input);
+    await this.getUnit(dataToUpdate.id);
+
+    return await this.repository.update(dataToUpdate);
+  }
+
+  private async validateData(
+    input: IUpdateUnitInput
+  ): Promise<IUpdateUnitInput> {
     const { isValid, data } = this.validator.validate(input);
-    const unitNameAlreadyExists = await this.repository.findByName(data?.name);
+    const nameAlreadyExists = await this.repository.findByName(input?.name);
 
-    if (!isValid) throw new ValidationError(data);
+    if (!isValid) {
+      throw nameAlreadyExists
+        ? new ValidationError([...data, '"name" provided is already in use'])
+        : new ValidationError(data);
+    }
 
-    if (unitNameAlreadyExists)
-      throw new ValidationError([`'name' provided is already in use`]);
+    if (isValid && nameAlreadyExists)
+      throw new ValidationError(['"name" provided is already in use']);
 
-    const unitToUpdate = await this.repository.findById(data.id);
+    return data;
+  }
 
-    if (!unitToUpdate)
+  private async getUnit(unitId: string): Promise<void> {
+    const unit = await this.repository.findById(unitId);
+
+    if (!unit)
       throw new NotFoundError(
-        `Could not update: data related to ID ${input.id} not found`
+        `Could not update: data related to ID ${unitId} not found`
       );
-
-    return await this.repository.update(data);
   }
 }
