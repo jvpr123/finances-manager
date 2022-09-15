@@ -36,9 +36,7 @@ export class CreateUnitUseCase implements ICreateUnitUseCase {
     return data;
   }
 
-  private async getOwner(
-    ownerId: string
-  ): Promise<Omit<IUserModel, "password">> {
+  private async getOwner(ownerId: string): Promise<IUserModel> {
     const unitOwner = await this.usersRepository.findById(ownerId);
 
     if (!unitOwner)

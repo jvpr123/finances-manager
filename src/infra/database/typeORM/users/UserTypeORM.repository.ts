@@ -28,7 +28,7 @@ export class UserTypeOrmRepository
     return await this.repository.findOneBy({ email });
   }
 
-  async findById(id: string): Promise<Omit<IUserModel, "password">> {
+  async findById(id: string): Promise<IUserModel> {
     return await this.repository.findOneBy({ id });
   }
 

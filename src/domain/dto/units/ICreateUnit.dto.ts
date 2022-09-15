@@ -12,5 +12,5 @@ export interface ICreateUnitDto {
   description: string;
   initialBalance: number;
   currentBalance: number;
-  owner: Omit<IUserModel, "password">;
+  owner: IUserModel;
 }
