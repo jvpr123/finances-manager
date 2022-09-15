@@ -19,29 +19,29 @@ import { ValidationError } from "src/errors/Validation.error";
 import { ICreateUserRepository } from "src/data/protocols/database/users/CreateUserRepository.interface";
 import { IFindUsersRepository } from "src/data/protocols/database/users/FindUsersRepository.interface";
 
+const makeValidatorStub = (): IValidator => ({
+  validate: resolveValue({ isValid: true, data: makeFakeCreateUserInput() }),
+});
+
+const makeEncrypterStub = (): IEncrypter => ({
+  hash: resolveValue("hashed_password"),
+});
+
+const makeRepositoryStub = (): ICreateUserRepository &
+  IFindUsersRepository => ({
+  create: resolveValue(makeFakeUser()),
+  findByEmail: resolveValue(undefined),
+  findById: resolveValue(undefined),
+  findAll: resolveValue(undefined),
+});
+
+const makeSUT = (
+  validator: IValidator,
+  encrypter: IEncrypter,
+  repository: ICreateUserRepository & IFindUsersRepository
+) => new CreateUserUseCase(validator, encrypter, repository);
+
 describe("Create User UseCase", () => {
-  const makeValidatorStub = (): IValidator => ({
-    validate: resolveValue({ isValid: true, data: makeFakeCreateUserInput() }),
-  });
-
-  const makeEncrypterStub = (): IEncrypter => ({
-    hash: resolveValue("hashed_password"),
-  });
-
-  const makeRepositoryStub = (): ICreateUserRepository &
-    IFindUsersRepository => ({
-    create: resolveValue(makeFakeUser()),
-    findByEmail: resolveValue(undefined),
-    findById: resolveValue(undefined),
-    findAll: resolveValue(undefined),
-  });
-
-  const makeSUT = (
-    validator: IValidator,
-    encrypter: IEncrypter,
-    repository: ICreateUserRepository & IFindUsersRepository
-  ) => new CreateUserUseCase(validator, encrypter, repository);
-
   let sut: ICreateUserUseCase;
   let validator: IValidator;
   let encrypter: IEncrypter;

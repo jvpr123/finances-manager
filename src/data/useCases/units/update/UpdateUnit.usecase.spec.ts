@@ -20,23 +20,23 @@ import { ValidationError } from "src/errors/Validation.error";
 import { NotFoundError } from "src/errors/NotFound.error";
 import { IUpdateUnitInput } from "src/domain/dto/units/IUpdateUnit.dto";
 
+const makeValidatorStub = (): IValidator => ({
+  validate: jest.fn(),
+});
+
+const makeRepositoryStub = (): IUpdateUnitRepository &
+  IFindUnitsRepository => ({
+  ...makeFindUnitsRepositoryStub(),
+  findByName: resolveValue(undefined),
+  update: resolveValue(makeFakeUnit()),
+});
+
+const makeSUT = (
+  validator: IValidator,
+  repository: IUpdateUnitRepository & IFindUnitsRepository
+) => new UpdateUnitUseCase(validator, repository);
+
 describe("Update Unit UseCase", () => {
-  const makeValidatorStub = (): IValidator => ({
-    validate: jest.fn(),
-  });
-
-  const makeRepositoryStub = (): IUpdateUnitRepository &
-    IFindUnitsRepository => ({
-    ...makeFindUnitsRepositoryStub(),
-    findByName: resolveValue(undefined),
-    update: resolveValue(makeFakeUnit()),
-  });
-
-  const makeSUT = (
-    validator: IValidator,
-    repository: IUpdateUnitRepository & IFindUnitsRepository
-  ) => new UpdateUnitUseCase(validator, repository);
-
   let sut: IUpdateUnitUseCase;
   let validator: IValidator;
   let repository: IUpdateUnitRepository & IFindUnitsRepository;

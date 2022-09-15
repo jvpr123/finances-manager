@@ -80,7 +80,7 @@ describe("Create Category UseCase", () => {
     it("should throw a Validation Error when title provided already exists", async () => {
       repository.findByTitle = resolveValueOnce(makeFakeCategory());
       expect(sut.execute(inputData)).rejects.toThrow(
-        new ValidationError(["Category title already in use"])
+        new ValidationError(['"title" provided already in use'])
       );
     });
 
