@@ -6,4 +6,5 @@ import { makeFakeTag } from "src/__tests__/utils/TagMocks.factory";
 export const makeFindTagsRepositoryStub = (): IFindTagsRepository => ({
   findByTitle: resolveValue(undefined),
   findById: resolveValue(makeFakeTag()),
+  findAll: resolveValue([makeFakeTag()]),
 });
