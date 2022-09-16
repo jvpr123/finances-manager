@@ -12,12 +12,12 @@ import { DeleteCategoryUseCase } from "./DeleteCategory.usecase";
 import { IFindCategoryRepository } from "src/data/protocols/database/categories/FindCategoryRepository.interface";
 import { IDeleteCategoryRepository } from "src/data/protocols/database/categories/DeleteCategoryRepository.interface";
 
-import { IDeleteUnitUseCase } from "src/domain/useCases/units/delete/DeleteUnit.interface";
+import { IDeleteCategoryUseCase } from "src/domain/useCases/categories/delete/DeleteCategory.interface";
 
 type Repository = IFindCategoryRepository & IDeleteCategoryRepository;
 describe("Delete Category UseCase", () => {
   const categoryData = makeFakeCategory();
-  let sut: IDeleteUnitUseCase;
+  let sut: IDeleteCategoryUseCase;
   let repository: Repository;
 
   const makeRepositoryStub = (): Repository => ({
