@@ -3,16 +3,16 @@ import { DataSource } from "typeorm";
 import { Category } from "src/infra/database/typeORM/categories/Category.entity";
 
 import { makeDataSource } from "src/__tests__/utils/typeORM/DataSource.factory";
-import { makeFakeCreateUnitDto } from "src/__tests__/utils/UnitMocks.factory";
+import { makeFakeCreateCategoryInput } from "src/__tests__/utils/CategoryMocks.factory";
 
 describe("Find All Categories (GET /categories)", () => {
   const req = request("http://localhost:3030/dev/categories");
-  const userInput = makeFakeCreateUnitDto();
+  const categoryInput = makeFakeCreateCategoryInput();
   let ds: DataSource;
 
   beforeAll(async () => {
     ds = await makeDataSource();
-    await req.post("/").send(userInput);
+    await req.post("/").send(categoryInput);
   });
 
   afterEach(async () => ds.getRepository<Category>(Category).clear());
