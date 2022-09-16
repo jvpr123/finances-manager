@@ -10,10 +10,14 @@ import {
 
 import { IValidator } from "src/data/protocols/validation/Validator.interface";
 import { ICreateTagRepository } from "src/data/protocols/database/tags/CreateTagRepository.interface";
+import { IFindTagsRepository } from "src/data/protocols/database/tags/FindTagsRepository.interface";
 
 import { CreateTagUseCase } from "./CreateTag.usecase";
 
 import { ValidationError } from "src/errors/Validation.error";
+import { makeFindTagsRepositoryStub } from "src/__tests__/utils/typeORM/tags/FindTagsRepository.factory";
+
+type IRepository = ICreateTagRepository & IFindTagsRepository;
 
 const makeValidatorStub = (): IValidator => ({
   validate: jest
@@ -21,19 +25,20 @@ const makeValidatorStub = (): IValidator => ({
     .mockReturnValue({ isValid: true, data: makeFakeCreateTagInput() }),
 });
 
-const makeRepositoryStub = (): ICreateTagRepository => ({
+const makeRepositoryStub = (): IRepository => ({
   create: resolveValue(makeFakeTag()),
+  ...makeFindTagsRepositoryStub(),
 });
 
 const makeSUT = (
   validator: IValidator,
-  repository: ICreateTagRepository
+  repository: IRepository
 ): CreateTagUseCase => new CreateTagUseCase(validator, repository);
 
 describe("Create Tag UseCase", () => {
   let sut: CreateTagUseCase;
   let validator: IValidator;
-  let repository: ICreateTagRepository;
+  let repository: IRepository;
 
   const inputData = makeFakeCreateTagInput();
 
@@ -67,17 +72,17 @@ describe("Create Tag UseCase", () => {
       expect(repository.create).toHaveBeenCalledWith(inputData);
     });
 
-    // it("should call findByTitle() method with correct values", async () => {
-    //   await sut.execute(inputData);
-    //   expect(repository.findByTitle).toHaveBeenCalledWith(inputData.title);
-    // });
+    it("should call findByTitle() method with correct values", async () => {
+      await sut.execute(inputData);
+      expect(repository.findByTitle).toHaveBeenCalledWith(inputData.title);
+    });
 
-    // it("should throw a Validation Error when title provided already exists", async () => {
-    //   repository.findByTitle = resolveValueOnce(makeFakeTag());
-    //   expect(sut.execute(inputData)).rejects.toThrow(
-    //     new ValidationError(['"title" provided already in use'])
-    //   );
-    // });
+    it("should throw a Validation Error when title provided already exists", async () => {
+      repository.findByTitle = resolveValueOnce(makeFakeTag());
+      expect(sut.execute(inputData)).rejects.toThrow(
+        new ValidationError(['"title" provided already in use'])
+      );
+    });
 
     it("should throw an error when repository throws", async () => {
       repository.create = rejectValueOnce(new Error());
