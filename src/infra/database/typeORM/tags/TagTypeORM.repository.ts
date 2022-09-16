@@ -6,9 +6,10 @@ import { ICreateCategoryInput } from "src/domain/dto/categories/CreateCategory.d
 
 import { ICreateTagRepository } from "src/data/protocols/database/tags/CreateTagRepository.interface";
 import { IFindTagsRepository } from "src/data/protocols/database/tags/FindTagsRepository.interface";
+import { IDeleteTagRepository } from "src/data/protocols/database/tags/DeleteTagRepository.interface";
 
 export class TagTypeOrmRepository
-  implements ICreateTagRepository, IFindTagsRepository
+  implements ICreateTagRepository, IFindTagsRepository, IDeleteTagRepository
 {
   constructor(private readonly repository: Repository<Tag>) {}
 
@@ -27,5 +28,10 @@ export class TagTypeOrmRepository
 
   async findAll(): Promise<ITagModel[]> {
     return await this.repository.find();
+  }
+
+  async delete(id: string): Promise<boolean> {
+    const result = await this.repository.delete({ id });
+    return result?.affected ? true : false;
   }
 }
