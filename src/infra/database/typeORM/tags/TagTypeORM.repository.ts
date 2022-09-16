@@ -24,4 +24,8 @@ export class TagTypeOrmRepository
   async findById(id: string): Promise<ITagModel> {
     return await this.repository.findOneBy({ id });
   }
+
+  async findAll(): Promise<ITagModel[]> {
+    return await this.repository.find();
+  }
 }
