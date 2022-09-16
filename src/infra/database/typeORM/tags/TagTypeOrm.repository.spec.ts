@@ -32,6 +32,7 @@ describe("Tag Repository - TypeORM", () => {
 
     repository.create = jest.fn().mockReturnValue(makeFakeTag());
     repository.save = resolveValue(makeFakeTag());
+    repository.findOneBy = resolveValue(makeFakeTag());
   });
 
   afterAll(async () => await ds.destroy());
@@ -57,25 +58,23 @@ describe("Tag Repository - TypeORM", () => {
     });
   });
 
-  // describe("findByTitle()", () => {
-  //   it("should call findOneBy() method with correct values", async () => {
-  //     await sut.findByTitle("category_title");
-  //     expect(repository.findOneBy).toHaveBeenCalledWith({
-  //       title: "category_title",
-  //     });
-  //   });
+  describe("findByTitle()", () => {
+    it("should call findOneBy() method with correct values", async () => {
+      await sut.findByTitle("tag_title");
+      expect(repository.findOneBy).toHaveBeenCalledWith({
+        title: "tag_title",
+      });
+    });
 
-  //   it("should throw an error when typeORM repository throws", async () => {
-  //     repository.findOneBy = rejectValueOnce(new Error());
-  //     expect(sut.findByTitle("category_title")).rejects.toThrow(new Error());
-  //   });
+    it("should throw an error when typeORM repository throws", async () => {
+      repository.findOneBy = rejectValueOnce(new Error());
+      expect(sut.findByTitle("tag_title")).rejects.toThrow(new Error());
+    });
 
-  //   it("should return an Category instance when operation succeeds", async () => {
-  //     expect(sut.findByTitle("category_title")).resolves.toEqual(
-  //       makeFakeTag()
-  //     );
-  //   });
-  // });
+    it("should return a Tag instance when operation succeeds", async () => {
+      expect(sut.findByTitle("tag_title")).resolves.toEqual(makeFakeTag());
+    });
+  });
 
   // describe("findById()", () => {
   //   it("should call findOneBy() method with correct values", async () => {
