@@ -20,4 +20,8 @@ export class TagTypeOrmRepository
   async findByTitle(title: string): Promise<ITagModel> {
     return await this.repository.findOneBy({ title });
   }
+
+  async findById(id: string): Promise<ITagModel> {
+    return await this.repository.findOneBy({ id });
+  }
 }
