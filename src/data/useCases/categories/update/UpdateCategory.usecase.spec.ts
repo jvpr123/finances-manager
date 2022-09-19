@@ -76,17 +76,17 @@ describe("Update Category UseCase", () => {
       expect(repository.update).toHaveBeenCalledWith(categoryInput);
     });
 
-    it("should call findById() method from units repository with correct values", async () => {
+    it("should call findById() method from categories repository with correct values", async () => {
       await sut.execute(categoryInput);
       expect(repository.findById).toHaveBeenCalledWith(categoryInput.id);
     });
 
-    it("should call findByTitle() method from units repository with correct values", async () => {
+    it("should call findByTitle() method from categories repository with correct values", async () => {
       await sut.execute(categoryInput);
       expect(repository.findByTitle).toHaveBeenCalledWith(categoryInput.title);
     });
 
-    it("should throw a Not Found Error when unit ID is not found", async () => {
+    it("should throw a Not Found Error when category ID is not found", async () => {
       repository.findById = resolveValueOnce(undefined);
       repository.findByTitle = resolveValueOnce(undefined);
 
@@ -101,7 +101,7 @@ describe("Update Category UseCase", () => {
       repository.findByTitle = resolveValueOnce(makeFakeCategory());
 
       expect(sut.execute(categoryInput)).rejects.toThrow(
-        new ValidationError([`'name' provided already in use`])
+        new ValidationError([`'title' provided already in use`])
       );
     });
 
