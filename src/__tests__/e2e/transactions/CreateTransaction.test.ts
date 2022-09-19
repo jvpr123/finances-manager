@@ -6,12 +6,15 @@ import { ICreateTransactionInput } from "src/domain/dto/transactions/CreateTrans
 
 import { Unit } from "src/infra/database/typeORM/units/Unit.entity";
 import { Category } from "src/infra/database/typeORM/categories/Category.entity";
-import { Transaction } from "src/infra/database/typeORM/transactions/Transaction.entity";
+import { Tag } from "src/infra/database/typeORM/tags/Tag.entity";
 
 import { makeDataSource } from "src/__tests__/utils/typeORM/DataSource.factory";
-import { makeFakeCreateUnitInput } from "src/__tests__/utils/UnitMocks.factory";
+import { makeFakeCreateUnitDto } from "src/__tests__/utils/UnitMocks.factory";
 import { makeFakeCreateTransactionInput } from "src/__tests__/utils/TransactionMocks.factory";
 import { makeFakeCreateCategoryInput } from "src/__tests__/utils/CategoryMocks.factory";
+import { makeFakeCreateTagInput } from "src/__tests__/utils/TagMocks.factory";
+import { User } from "src/infra/database/typeORM/users/User.entity";
+import { makeFakeCreateUserInput } from "src/__tests__/utils/UserMocks.factory";
 
 describe("Create Transaction (POST /transactions)", () => {
   const req = request("http://localhost:3030/dev/transactions");
@@ -20,34 +23,41 @@ describe("Create Transaction (POST /transactions)", () => {
   let ds: DataSource;
 
   beforeAll(async () => {
-    ds = await makeDataSource();
+    try {
+      ds = await makeDataSource();
 
-    const unitsRepository = ds.getRepository<Unit>(Unit);
-    const categoriesRepository = ds.getRepository<Category>(Category);
+      const usersRepository = ds.getRepository<User>(User);
+      const unitsRepository = ds.getRepository<Unit>(Unit);
+      const categoriesRepository = ds.getRepository<Category>(Category);
+      const tagsRepository = ds.getRepository<Tag>(Tag);
 
-    const fakeUnit = unitsRepository.create({
-      ...makeFakeCreateUnitInput(),
-      currentBalance: 0,
-    });
-    const fakeCategoy = categoriesRepository.create(
-      makeFakeCreateCategoryInput()
-    );
+      const fakeUser = usersRepository.create(makeFakeCreateUserInput());
+      const fakeUnit = unitsRepository.create(makeFakeCreateUnitDto());
+      const fakeCategory = categoriesRepository.create(
+        makeFakeCreateCategoryInput()
+      );
+      const fakeTag = tagsRepository.create(makeFakeCreateTagInput());
 
-    await unitsRepository.save(fakeUnit);
-    await categoriesRepository.save(fakeCategoy);
+      fakeUnit.owner = fakeUser;
 
-    transactionInput = {
-      ...makeFakeCreateTransactionInput(),
-      unitId: fakeUnit.id,
-      categoryId: fakeCategoy.id,
-    };
+      await usersRepository.save(fakeUser);
+      await unitsRepository.save(fakeUnit);
+      await categoriesRepository.save(fakeCategory);
+      await tagsRepository.save(fakeTag);
+
+      transactionInput = {
+        ...makeFakeCreateTransactionInput(),
+        unitId: fakeUnit.id,
+        categoryId: fakeCategory.id,
+        tagsId: [fakeTag.id],
+      };
+    } catch (error) {
+      console.log(error);
+    }
   });
 
-  beforeEach(async () => ds.getRepository<Transaction>(Transaction).clear());
-
   afterAll(async () => {
-    ds.getRepository<Unit>(Unit).clear();
-    ds.getRepository<Category>(Category).clear();
+    await ds.destroy();
   });
 
   it("should return 201 with created transaction data when valid data is provided", async () => {
@@ -89,6 +99,18 @@ describe("Create Transaction (POST /transactions)", () => {
     expect(response.body).toStrictEqual({
       message:
         "Could not create: Category data related to ID provided not found",
+    });
+  });
+
+  it("should return 404 with errors description when invalid tag ID is provided", async () => {
+    const randomTagId = randomUUID();
+    const response = await req
+      .post("/")
+      .send({ ...transactionInput, tagsId: [randomTagId] });
+
+    expect(response.statusCode).toBe(404);
+    expect(response.body).toStrictEqual({
+      message: `Could not create: some tags provided were not found: ${randomTagId}`,
     });
   });
 });

@@ -1,4 +1,7 @@
 import { makeFindUnitsRepositoryStub } from "src/__tests__/utils/typeORM/units/FindUnitsRepository.factory";
+import { makeFindCategoryRepositoryStub } from "src/__tests__/utils/typeORM/categories/FindCategoryRepository.factory";
+import { makeFindTagsRepositoryStub } from "src/__tests__/utils/typeORM/tags/FindTagsRepository.factory";
+import { makeFakeCategory } from "src/__tests__/utils/CategoryMocks.factory";
 import {
   rejectValueOnce,
   resolveValue,
@@ -13,13 +16,13 @@ import {
 import { IValidator } from "src/data/protocols/validation/Validator.interface";
 import { IFindUnitsRepository } from "src/data/protocols/database/units/FindUnitsRepository.interface";
 import { IFindCategoryRepository } from "src/data/protocols/database/categories/FindCategoryRepository.interface";
+import { IFindTagsRepository } from "src/data/protocols/database/tags/FindTagsRepository.interface";
 import { ICreateTransactionRepository } from "src/data/protocols/database/transactions/CreateTransactionRepository.interface";
 
 import { CreateTransactionUseCase } from "./CreateTransaction.usecase";
 
 import { ValidationError } from "src/errors/Validation.error";
 import { NotFoundError } from "src/errors/NotFound.error";
-import { makeFindCategoryRepositoryStub } from "src/__tests__/utils/typeORM/categories/FindCategoryRepository.factory";
 
 const makeValidatorStub = (): IValidator => ({
   validate: jest
@@ -35,12 +38,14 @@ const makeSUT = (
   validator: IValidator,
   unitsRepository: IFindUnitsRepository,
   categoriesRepository: IFindCategoryRepository,
+  tagsRepository: IFindTagsRepository,
   transactionsRepository: ICreateTransactionRepository
 ): CreateTransactionUseCase =>
   new CreateTransactionUseCase(
     validator,
     unitsRepository,
     categoriesRepository,
+    tagsRepository,
     transactionsRepository
   );
 
@@ -49,6 +54,7 @@ describe("Create Transaction UseCase", () => {
   let validator: IValidator;
   let unitsRepository: IFindUnitsRepository;
   let categoriesRepository: IFindCategoryRepository;
+  let tagsRepository: IFindTagsRepository;
   let transactionsRepository: ICreateTransactionRepository;
 
   const inputData = makeFakeCreateTransactionInput();
@@ -57,12 +63,14 @@ describe("Create Transaction UseCase", () => {
     validator = makeValidatorStub();
     unitsRepository = makeFindUnitsRepositoryStub();
     categoriesRepository = makeFindCategoryRepositoryStub();
+    tagsRepository = makeFindTagsRepositoryStub();
     transactionsRepository = makeRepositoryStub();
 
     sut = makeSUT(
       validator,
       unitsRepository,
       categoriesRepository,
+      tagsRepository,
       transactionsRepository
     );
   });
@@ -116,6 +124,24 @@ describe("Create Transaction UseCase", () => {
       expect(sut.execute(inputData)).rejects.toThrow(
         new NotFoundError(
           "Could not create: Category data related to ID provided not found"
+        )
+      );
+    });
+  });
+
+  describe("Dependency: Tags Repository", () => {
+    it("should call findById() method from tags repository with correct values", async () => {
+      await sut.execute(inputData);
+      expect(tagsRepository.findById).toHaveBeenCalledWith(inputData.tagsId[0]);
+    });
+
+    it("should throw a NotFoundError if at least one tag is not found", async () => {
+      categoriesRepository.findById = resolveValueOnce(makeFakeCategory());
+      tagsRepository.findById = resolveValueOnce(undefined);
+
+      expect(sut.execute(inputData)).rejects.toThrow(
+        new NotFoundError(
+          `Could not create: some tags provided were not found: ${inputData.tagsId[0]}`
         )
       );
     });

@@ -7,12 +7,15 @@ import {
 
 import { makeFakeUnit } from "./UnitMocks.factory";
 import { makeFakeCategory } from "src/__tests__/utils/CategoryMocks.factory";
+import { makeFakeTag } from "./TagMocks.factory";
 
 export const makeFakeCreateTransactionInput = (
   value?: number
 ): ICreateTransactionInput => ({
   unitId: "unit_id",
   categoryId: "category_id",
+  tagsId: ["tag_id"],
+
   title: "transaction_title",
   description: "transaction_description",
   value: value ? value : 100,
@@ -24,6 +27,8 @@ export const makeFakeCreateTransactionDto = (
 ): ICreateTransactionDto => ({
   unit: makeFakeUnit(),
   category: makeFakeCategory(),
+  tags: [makeFakeTag()],
+
   title: "transaction_title",
   description: "transaction_description",
   value: value ? value : 100,

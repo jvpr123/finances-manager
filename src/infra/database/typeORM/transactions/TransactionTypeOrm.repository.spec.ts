@@ -42,7 +42,7 @@ describe("Transaction Repository - TypeORM", () => {
 
   describe("create()", () => {
     it("should call create() method from typeORM repository with correct values", async () => {
-      const { unit, category, ...data } = inputData;
+      const { unit, category, tags, ...data } = inputData;
 
       await sut.create(inputData);
       expect(repository.create).toHaveBeenCalledWith(data);
@@ -58,7 +58,7 @@ describe("Transaction Repository - TypeORM", () => {
       expect(sut.create(inputData)).rejects.toThrow(new Error());
     });
 
-    it("should return an User instance when operation succeeds", async () => {
+    it("should return an Transaction instance when operation succeeds", async () => {
       expect(sut.create(inputData)).resolves.toEqual(makeFakeTransaction());
     });
   });

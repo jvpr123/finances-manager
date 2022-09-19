@@ -15,5 +15,6 @@ export const makeDataSource = async () => {
   });
 
   await ds.initialize();
+  await ds.synchronize();
   return ds;
 };
