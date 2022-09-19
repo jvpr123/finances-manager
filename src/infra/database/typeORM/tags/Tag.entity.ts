@@ -3,10 +3,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  // ManyToMany,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Transaction } from "../transactions/Transaction.entity";
 
 @Entity()
 export class Tag implements ITagModel {
@@ -28,6 +30,7 @@ export class Tag implements ITagModel {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // @ManyToMany(() => Transaction, (transaction) => transaction.tags)
-  // transactions: Transaction[];
+  @ManyToMany(() => Transaction, (transaction) => transaction.tags)
+  @JoinTable()
+  transactions: Transaction[];
 }

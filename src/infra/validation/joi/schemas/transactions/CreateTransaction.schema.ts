@@ -7,6 +7,7 @@ export const CreateTransactionJoiSchema = Joi.object<
 >({
   unitId: Joi.string().uuid().required(),
   categoryId: Joi.string().uuid().required(),
+  tagsId: Joi.array().items(Joi.string().uuid()).optional(),
   title: Joi.string().min(3).max(100).required(),
   description: Joi.string().min(5).max(255).required(),
   value: Joi.number().min(0).required(),

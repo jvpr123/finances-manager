@@ -4,11 +4,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { Category } from "../categories/Category.entity";
+import { Tag } from "src/infra/database/typeORM/tags/Tag.entity";
 
 @Entity()
 export class Transaction implements ITransactionModel {
@@ -38,4 +40,7 @@ export class Transaction implements ITransactionModel {
 
   @ManyToOne(() => Category, (category) => category.transactions)
   category: Category;
+
+  @ManyToMany(() => Tag, (tag) => tag.transactions)
+  tags?: Tag[];
 }

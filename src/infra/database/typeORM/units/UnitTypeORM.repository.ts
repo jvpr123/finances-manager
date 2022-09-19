@@ -10,6 +10,7 @@ import { IUpdateUnitInput } from "src/domain/dto/units/IUpdateUnit.dto";
 import { IUnitModel } from "src/domain/models/Unit.model";
 
 import { Unit } from "./Unit.entity";
+import { User } from "../users/User.entity";
 
 export class UnitTypeOrmRepository
   implements
@@ -22,7 +23,7 @@ export class UnitTypeOrmRepository
 
   async create({ owner, ...data }: ICreateUnitDto): Promise<IUnitModel> {
     const unitToCreate = this.repository.create(data);
-    unitToCreate.owner = owner;
+    unitToCreate.owner = owner as User;
 
     return await this.repository.save(unitToCreate);
   }

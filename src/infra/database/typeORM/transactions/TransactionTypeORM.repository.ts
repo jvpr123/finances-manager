@@ -1,5 +1,8 @@
 import { Repository } from "typeorm";
 import { Transaction } from "./Transaction.entity";
+import { Unit } from "../units/Unit.entity";
+import { Category } from "../categories/Category.entity";
+import { Tag } from "../tags/Tag.entity";
 
 import { ITransactionModel } from "src/domain/models/Transaction.model";
 import { ICreateTransactionDto } from "src/domain/dto/transactions/CreateTransaction.dto";
@@ -22,12 +25,14 @@ export class TransactionTypeOrmRepository
   async create({
     unit,
     category,
+    tags,
     ...data
   }: ICreateTransactionDto): Promise<ITransactionModel> {
     const transactionToCreate = this.repository.create(data);
 
-    transactionToCreate.unit = unit;
-    transactionToCreate.category = category;
+    transactionToCreate.unit = unit as Unit;
+    transactionToCreate.category = category as Category;
+    if (tags.length > 0) transactionToCreate.tags = tags as Tag[];
 
     return await this.repository.save(transactionToCreate);
   }
