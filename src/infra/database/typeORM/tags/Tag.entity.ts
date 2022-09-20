@@ -31,6 +31,6 @@ export class Tag implements ITagModel {
   updatedAt: Date;
 
   @ManyToMany(() => Transaction, (transaction) => transaction.tags)
-  @JoinTable()
+  @JoinTable({ name: "tags_transactions" })
   transactions: Transaction[];
 }

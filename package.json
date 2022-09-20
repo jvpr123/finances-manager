@@ -41,6 +41,9 @@
     "t:unit": "yarn test -c jest-unit-config.ts --verbose",
     "t:e2e": "yarn test -c jest-e2e-config.ts --verbose",
     "tw:unit": "yarn t:unit --watch",
-    "tw:e2e": "yarn t:e2e --watch"
+    "tw:e2e": "yarn t:e2e --watch",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "migration:create": "yarn typeorm migration:create",
+    "migration:run": "yarn typeorm migration:run"
   }
 }

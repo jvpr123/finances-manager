@@ -11,4 +11,6 @@ export const TypeOrmDataSource = new DataSource({
   database: "tmp/db.sqlite",
   synchronize: true,
   entities: [User, Unit, Transaction, Category, Tag],
+  migrationsTableName: "migrations_table",
+  migrations: ["src/infra/database/typeORM/migrations"],
 });
